@@ -22,8 +22,8 @@
         },
         ch: {
             game_host: 'http://gfcn-game.gw.merge.sunborngame.com/index.php/1000',
-            cdn_host: 'http://gf-cn.cdn.sunborngame.com/',
-            asset_host: 'http://gf-cn.cdn.sunborngame.com/',
+            cdn_host: 'http://gf-cn.cdn.sunborngame.com',
+            asset_host: 'http://gf-cn.cdn.sunborngame.com',
         },
     },
     res_key: 'kxwL8X2+fgM=',

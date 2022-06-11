@@ -14,6 +14,8 @@ import base64
 import re
 from gzip import GzipFile
 from zipfile import ZipFile
+from git.repo import Repo
+
 
 CONFIG_JSON5 = r'conf/config.json5'
 RAW_ROOT = r'raw'
@@ -31,6 +33,8 @@ class DataMiner():
         self.dat_key = conf['dat_key']
         self.raw_dir = os.path.join(RAW_ROOT,region)
         self.data_dir = os.path.join(DATA_ROOT,region)
+        if os.path.exists(self.raw_dir):
+            shutil.rmtree(self.raw_dir)
         os.makedirs(self.raw_dir,exist_ok=True)
         os.makedirs(self.data_dir,exist_ok=True)
 
@@ -59,6 +63,7 @@ class DataMiner():
         unpack_all_assets(resdata_fp,self.raw_dir)
         with open(os.path.join(self.raw_dir,'assets/resources/resdata.asset')) as f:
             self.resdata = pyjson5.load(f)
+        shutil.copy(os.path.join(self.raw_dir,'assets/resources/resdata.asset'),os.path.join(self.data_dir,'resdata.json'))
 
     def get_asset_bundles(self):
         res_url = self.resdata['resUrl']
@@ -71,7 +76,7 @@ class DataMiner():
 
     def get_stc(self):
         hash = get_md5_hash(self.dataVersion)
-        stc_url = self.host['cdn_host'] + "data/stc_" + self.dataVersion + hash + ".zip"
+        stc_url = self.host['cdn_host'] + "/data/stc_" + self.dataVersion + hash + ".zip"
         stc_fp = os.path.join(self.raw_dir,'stc.zip')
         download(stc_url,stc_fp)
         ZipFile(stc_fp).extractall(os.path.join(self.raw_dir,'stc'))
@@ -91,17 +96,20 @@ class DataMiner():
                 available =True
         if available:
             logging.info('new data available, start downloading')
-            with open(os.path.join(self.data_dir,'version.json'),'wb') as f:
-                print(self.version)
-                pyjson5.dump(self.version,f)
             self.get_res_data()
             self.get_asset_bundles()
             self.get_stc()
             self.process_assets()
             self.process_catchdata()
             self.process_stc()
+            with open(os.path.join(self.data_dir,'version.json'),'wb') as f:
+                json.dump(self.version,f,indent=4,ensure_ascii=False)
+            repo = Repo('./')
+            repo.index.add('.')
+            repo.index.commit(f'[{self.region}] client {self.clientVersion} | ab {self.abVersion} | data {self.dataVersion}')
         else:
             logging.info('current data is up to date')
+        shutil.rmtree(self.raw_dir)
         return available
         
     def process_assets(self):
@@ -160,13 +168,11 @@ class DataMiner():
             mapping = os.path.join(mapping_dir,f'{id}.json')
             name, data = format_stc(stc,mapping)
             with open(os.path.join(dst_dir, f'{name}.json'),'w') as f:
-                json.dump(data,f) 
+                json.dump(data,f,indent=4,ensure_ascii=False)
 
 # %%
 if __name__=='__main__':
-    logging.basicConfig(level='INFO')
-    data_miner = DataMiner('ch')
-    data_miner.update_raw_resource()
-    
-
-# %%
+    logging.basicConfig(level='INFO',format='%(asctime)s %(levelname)s:%(message)s')
+    for region in ['ch','tw','kr','jp','en']:
+        data_miner = DataMiner(region)
+        data_miner.update_raw_resource()
