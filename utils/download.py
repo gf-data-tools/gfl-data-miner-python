@@ -17,7 +17,7 @@ def download(url, path):
                 logging.info(f'successfully downloaded {path}')
             else:
                 logging.info(f'{path} already exists, skip downloading')
-        except URLError as e:
+        except Exception as e:
             logging.warning(f'download {url} failed, retrying')
             logging.warning(f'Exception: {e}')
             continue

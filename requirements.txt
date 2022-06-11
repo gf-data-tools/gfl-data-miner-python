@@ -1,0 +1,4 @@
+GitPython
+pyjson5
+UnityPy
+pycryptodome
