@@ -176,7 +176,7 @@ class DataMiner():
 # %%
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('region',nargs='+',choices=['ch','tw','kr','jp','en'])
+    parser.add_argument('region',nargs='+',choices=['ch','tw','kr','jp','us'])
     args=parser.parse_args()
     for region in args.region:
         logging.basicConfig(level='INFO',format=f'%(asctime)s %(levelname)s: [{region.upper()}] %(message)s',force=True)
