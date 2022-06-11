@@ -1,0 +1,9 @@
+{
+    "name": "item_access",
+    "fields": [
+        "id",
+        "name",
+        "carnival_goto_page_id",
+        "function_control_id"
+    ]
+}

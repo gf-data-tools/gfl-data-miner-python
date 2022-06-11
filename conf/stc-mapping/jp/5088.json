@@ -1,0 +1,8 @@
+{
+    "name": "unit_character",
+    "fields": [
+        "id",
+        "name",
+        "character_des"
+    ]
+}

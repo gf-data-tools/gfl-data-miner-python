@@ -1,0 +1,10 @@
+{
+    "name": "guild_flag",
+    "fields": [
+        "id",
+        "type",
+        "pattern_code",
+        "texture",
+        "color"
+    ]
+}

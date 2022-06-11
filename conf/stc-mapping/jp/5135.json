@@ -1,0 +1,12 @@
+{
+    "name": "chess_camp_type",
+    "fields": [
+        "id",
+        "name",
+        "des",
+        "camp_skill",
+        "passive_skill",
+        "color",
+        "code"
+    ]
+}

@@ -1,0 +1,33 @@
+{
+    hosts:{
+        us: {
+            game_host: 'http://gf-game.sunborngame.com/index.php/1001',
+            cdn_host: 'http://gfus-cdn.sunborngame.com',
+            asset_host: 'http://gfus-cdn.sunborngame.com',
+        },
+        jp: {
+            game_host: 'http://gfjp-game.sunborngame.com/index.php/1001',
+            cdn_host: 'http://gfjp-cdn.sunborngame.com',
+            asset_host: 'http://gfjp-cdn.sunborngame.com',
+        },
+        kr: {
+            game_host: 'http://gf-game.girlfrontline.co.kr/index.php/1001',
+            cdn_host: 'http://gfkrcdn.imtxwy.com',
+            asset_host: 'http://sn-list.girlfrontline.co.kr',
+        },
+        tw: {
+            game_host: 'http://sn-game.txwy.tw/index.php/1001',
+            cdn_host: 'http://sncdn.imtxwy.com',
+            asset_host: 'http://sn-list.txwy.tw',
+        },
+        ch: {
+            game_host: 'http://gfcn-game.gw.merge.sunborngame.com/index.php/1000',
+            cdn_host: 'http://gf-cn.cdn.sunborngame.com/',
+            asset_host: 'http://gf-cn.cdn.sunborngame.com/',
+        },
+    },
+    res_key: 'kxwL8X2+fgM=',
+    res_iv: 'M9lp+7j2Jdwqr+Yj1h+A',
+    lua_key: 'lvbb3zfc3faa8mq1rx0r0gl61b4338fa',
+    dat_key: 'c88d016d261eb80ce4d6e41a510d4048'
+}

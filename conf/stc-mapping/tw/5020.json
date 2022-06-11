@@ -1,0 +1,9 @@
+{
+    "name": "squad_rank",
+    "fields": [
+        "star_id",
+        "lv_unlock",
+        "cost_self_piece",
+        "cpu_rate"
+    ]
+}

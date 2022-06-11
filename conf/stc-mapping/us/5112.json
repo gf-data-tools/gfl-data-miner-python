@@ -1,0 +1,12 @@
+{
+    "name": "fetter_bounty",
+    "fields": [
+        "id",
+        "fetter_id",
+        "type",
+        "value",
+        "point",
+        "name",
+        "description"
+    ]
+}

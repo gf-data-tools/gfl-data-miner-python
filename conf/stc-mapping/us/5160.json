@@ -1,0 +1,10 @@
+{
+    "name": "equip_type",
+    "fields": [
+        "type",
+        "name",
+        "category",
+        "code",
+        "des"
+    ]
+}

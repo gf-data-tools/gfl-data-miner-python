@@ -1,0 +1,9 @@
+{
+    "name": "event_rank",
+    "fields": [
+        "id",
+        "title",
+        "remake_id",
+        "weight"
+    ]
+}

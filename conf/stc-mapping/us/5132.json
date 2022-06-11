@@ -1,0 +1,16 @@
+{
+    "name": "npc",
+    "fields": [
+        "id",
+        "name",
+        "code",
+        "title",
+        "ai",
+        "is_adjutant",
+        "unlock_text",
+        "mission_id",
+        "item_id",
+        "skin_code",
+        "voice_code"
+    ]
+}

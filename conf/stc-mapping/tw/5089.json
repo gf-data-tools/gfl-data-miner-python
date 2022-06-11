@@ -1,0 +1,12 @@
+{
+    "name": "team_ai",
+    "fields": [
+        "id",
+        "force_id",
+        "ai_type",
+        "name",
+        "description",
+        "pic",
+        "color"
+    ]
+}
