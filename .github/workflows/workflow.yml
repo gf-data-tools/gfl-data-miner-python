@@ -1,0 +1,22 @@
+name: gfl-data-miner
+
+on:
+  schedule:
+    - cron: '0 9,21 * * *'
+  workflow_dispatch:
+
+jobs:
+  gfl-data-miner-workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2.2.2
+        with:
+          python-version: '3.8'
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+      - name: Data Miner
+        run: python data_miner.py tw kr jp us ch 
+      - name: Git Push
+        run: git push
