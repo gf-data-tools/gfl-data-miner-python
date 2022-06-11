@@ -105,9 +105,9 @@ class DataMiner():
             self.process_stc()
             with open(os.path.join(self.data_dir,'version.json'),'w') as f:
                 json.dump(self.version,f,indent=4,ensure_ascii=False)
-            # git = Git('./')
-            # repo.index.add('.')
-            # repo.index.commit(f'[{self.region}] client {self.clientVersion} | ab {self.abVersion} | data {self.dataVersion}')
+            git = Git('./')
+            git.execute('git add .')
+            git.execute(f'git commit -m "[{self.region}] client {self.clientVersion} | ab {self.abVersion} | data {self.dataVersion}"')
         else:
             logging.info('current data is up to date')
         shutil.rmtree(self.raw_dir)
