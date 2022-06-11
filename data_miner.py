@@ -14,8 +14,8 @@ import base64
 import re
 from gzip import GzipFile
 from zipfile import ZipFile
-from git.repo import Repo
-
+from git import Git
+import argparse
 
 CONFIG_JSON5 = r'conf/config.json5'
 RAW_ROOT = r'raw'
@@ -40,6 +40,7 @@ class DataMiner():
 
     def get_current_version(self):
         version_url = self.host['game_host'] + '/Index/version'
+        logging.info(f'requesting version from {version_url}')
         response = request.urlopen(version_url)
         version = pyjson5.loads(response.read().decode())
         self.version = version
@@ -102,11 +103,11 @@ class DataMiner():
             self.process_assets()
             self.process_catchdata()
             self.process_stc()
-            with open(os.path.join(self.data_dir,'version.json'),'wb') as f:
+            with open(os.path.join(self.data_dir,'version.json'),'w') as f:
                 json.dump(self.version,f,indent=4,ensure_ascii=False)
-            repo = Repo('./')
-            repo.index.add('.')
-            repo.index.commit(f'[{self.region}] client {self.clientVersion} | ab {self.abVersion} | data {self.dataVersion}')
+            # git = Git('./')
+            # repo.index.add('.')
+            # repo.index.commit(f'[{self.region}] client {self.clientVersion} | ab {self.abVersion} | data {self.dataVersion}')
         else:
             logging.info('current data is up to date')
         shutil.rmtree(self.raw_dir)
@@ -172,7 +173,10 @@ class DataMiner():
 
 # %%
 if __name__=='__main__':
-    logging.basicConfig(level='INFO',format='%(asctime)s %(levelname)s:%(message)s')
-    for region in ['ch','tw','kr','jp','en']:
+    parser = argparse.ArgumentParser()
+    parser.add_argument('region',nargs='+',choices=['ch','tw','kr','jp','en'])
+    args=parser.parse_args()
+    for region in args.region:
+        logging.basicConfig(level='INFO',format=f'%(asctime)s %(levelname)s: [{region.upper()}] %(message)s',force=True)
         data_miner = DataMiner(region)
         data_miner.update_raw_resource()
