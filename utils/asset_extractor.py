@@ -8,11 +8,10 @@ import UnityPy
 def unpack_all_assets(file: str, destination_folder: str):
     logging.info(f'unpacking {file}')
     env = UnityPy.load(file)
-    logging.info(env.container)
     for path, obj in env.container.items():
         data = obj.read()
         out = None
-        logging.info(f'processing {obj.type.name} {path}')
+        logging.info(f'unpacking {obj.type.name} {path}')
         if obj.type.name in ["TextAsset"]:
             out = data.script
         elif obj.type.name in ["MonoBehaviour"]:
