@@ -81,8 +81,6 @@ class DataMiner():
         stc_fp = os.path.join(self.raw_dir,'stc.zip')
         download(stc_url,stc_fp)
         ZipFile(stc_fp).extractall(os.path.join(self.raw_dir,'stc'))
-
-
     
     def update_raw_resource(self):
         self.get_current_version()
@@ -107,8 +105,8 @@ class DataMiner():
                 json.dump(self.version,f,indent=4,ensure_ascii=False)
             git = Git('./')
             logging.info('committing')
-            git.execute('git add .')
-            response = git.execute(f'git commit -m "[{self.region}] client {self.clientVersion} | ab {self.abVersion} | data {self.dataVersion}"')
+            git.execute('git add .', shell=True)
+            response = git.execute(f'git commit -m "[{self.region}] client {self.clientVersion} | ab {self.abVersion} | data {self.dataVersion}"', shell=True)
             logging.info(response)
         else:
             logging.info('current data is up to date')

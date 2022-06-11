@@ -13,8 +13,8 @@ jobs:
       - name: git
         run: |
           git --version
-          git config user.name "GitHub Actions Bot"
-          git config user.email "<>"
+          git config user.name "ZeroRin"
+          git config user.email "pptxp@qq.com"
       - name: Setup Python
         uses: actions/setup-python@v2.2.2
         with:
