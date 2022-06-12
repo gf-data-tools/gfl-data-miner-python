@@ -91,7 +91,7 @@ def format_stc(stc: str, mapping:str):
         for key,id in zip(stc_conf['fields'], type_ids):
             record[key] = reader.read(id)
         if flag_dict:
-            data['id'] = record
+            data[record['id']] = record
         else:
             data.append(record)
     return stc_conf["name"], data
