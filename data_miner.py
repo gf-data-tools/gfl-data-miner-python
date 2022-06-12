@@ -33,10 +33,6 @@ class DataMiner():
         self.dat_key = conf['dat_key']
         self.raw_dir = os.path.join(RAW_ROOT,region)
         self.data_dir = os.path.join(DATA_ROOT,region)
-        if os.path.exists(self.raw_dir):
-            shutil.rmtree(self.raw_dir)
-        os.makedirs(self.raw_dir,exist_ok=True)
-        os.makedirs(self.data_dir,exist_ok=True)
 
     def get_current_version(self):
         version_url = self.host['game_host'] + '/Index/version'
@@ -82,18 +78,26 @@ class DataMiner():
         download(stc_url,stc_fp)
         ZipFile(stc_fp).extractall(os.path.join(self.raw_dir,'stc'))
     
-    def update_raw_resource(self):
+    def update_raw_resource(self, force=False):
         self.get_current_version()
         available = False
-        saved_version_fp = os.path.join(self.data_dir,'version.json')
-        if not os.path.exists(saved_version_fp):
-            available = True
+        if not force:
+            saved_version_fp = os.path.join(self.data_dir,'version.json')
+            if not os.path.exists(saved_version_fp):
+                available = True
+            else:
+                with open(saved_version_fp) as f:
+                    version = pyjson5.load(f)
+                if version["data_version"] != self.dataVersion:
+                    available =True
         else:
-            with open(saved_version_fp) as f:
-                version = pyjson5.load(f)
-            if version["data_version"] != self.dataVersion:
-                available =True
+            available = True
+
         if available:
+            for dir in [self.raw_dir, self.data_dir]:
+                if os.path.exists(dir):
+                    shutil.rmtree(dir)
+                os.makedirs(dir)
             logging.info('new data available, start downloading')
             self.get_res_data()
             self.get_asset_bundles()
@@ -108,9 +112,9 @@ class DataMiner():
             git.execute('git add .', shell=True)
             response = git.execute(f'git commit -m "[{self.region}] client {self.clientVersion} | ab {self.abVersion} | data {self.dataVersion}"', shell=True)
             logging.info(response)
+            shutil.rmtree(self.raw_dir)
         else:
             logging.info('current data is up to date')
-        shutil.rmtree(self.raw_dir)
         return available
         
     def process_assets(self):
@@ -175,8 +179,9 @@ class DataMiner():
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('region',nargs='+',choices=['ch','tw','kr','jp','us'])
+    parser.add_argument('--force', '-f',action='store_true')
     args=parser.parse_args()
     for region in args.region:
         logging.basicConfig(level='INFO',format=f'%(asctime)s %(levelname)s: [{region.upper()}] %(message)s',force=True)
         data_miner = DataMiner(region)
-        data_miner.update_raw_resource()
+        data_miner.update_raw_resource(args.force)

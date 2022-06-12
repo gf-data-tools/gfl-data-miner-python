@@ -3,6 +3,7 @@ import logging
 import struct
 import os
 import json
+from collections import OrderedDict
 
 # %%
 class StcReader:
@@ -61,7 +62,12 @@ def format_stc(stc: str, mapping:str):
     code = reader.read_ushort()
     reader.skip_bytes(2)
     logging.info(f'reading {os.path.split(stc)[-1]}, code {code}')
-    data = []
+    if 'id' in stc_conf['fields']:
+        data = OrderedDict()
+        flag_dict = True
+    else:
+        data = list()
+        flag_dict = False
     
     row = reader.read_ushort()
     if row == 0:
@@ -81,10 +87,13 @@ def format_stc(stc: str, mapping:str):
     offset = reader.read_int()
     reader.seek(offset)
     for _ in range(row):
-        record = {}
+        record = OrderedDict()
         for key,id in zip(stc_conf['fields'], type_ids):
             record[key] = reader.read(id)
-        data.append(record)
+        if flag_dict:
+            data['id'] = record
+        else:
+            data.append(record)
     return stc_conf["name"], data
 
 
