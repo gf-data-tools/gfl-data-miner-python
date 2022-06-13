@@ -62,12 +62,7 @@ def format_stc(stc: str, mapping:str):
     code = reader.read_ushort()
     reader.skip_bytes(2)
     logging.info(f'reading {os.path.split(stc)[-1]}, code {code}')
-    if 'id' in stc_conf['fields']:
-        data = OrderedDict()
-        flag_dict = True
-    else:
-        data = list()
-        flag_dict = False
+    data = list()
     
     row = reader.read_ushort()
     if row == 0:
@@ -90,10 +85,7 @@ def format_stc(stc: str, mapping:str):
         record = OrderedDict()
         for key,id in zip(stc_conf['fields'], type_ids):
             record[key] = reader.read(id)
-        if flag_dict:
-            data[record['id']] = record
-        else:
-            data.append(record)
+        data.append(record)
     return stc_conf["name"], data
 
 

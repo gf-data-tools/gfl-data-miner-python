@@ -109,7 +109,7 @@ class DataMiner():
                 json.dump(self.version,f,indent=4,ensure_ascii=False)
             git = Git('./')
             logging.info('committing')
-            git.execute('git add .', shell=True)
+            git.execute(f'git add {self.data_dir}', shell=True)
             response = git.execute(f'git commit -m "[{self.region}] client {self.clientVersion} | ab {self.abVersion} | data {self.dataVersion}"', shell=True)
             logging.info(response)
             shutil.rmtree(self.raw_dir)
