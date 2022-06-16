@@ -2,7 +2,7 @@ name: gfl-data-miner
 
 on:
   schedule:
-    - cron: '0 9,21 * * *'
+    - cron: '0 0/3 * * *'
   workflow_dispatch:
 
 jobs:
@@ -15,6 +15,7 @@ jobs:
           git --version
           git config user.name "AutoUpdate"
           git config user.email "<>"
+          git config core.autocrlf true
       - name: Setup Python
         uses: actions/setup-python@v2.2.2
         with:
