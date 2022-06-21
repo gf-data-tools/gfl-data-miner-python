@@ -1,0 +1,10 @@
+{
+    "name": "chess_gasha_reward",
+    "fields": [
+        "id",
+        "item_ids",
+        "gift",
+        "prize_id",
+        "type"
+    ]
+}

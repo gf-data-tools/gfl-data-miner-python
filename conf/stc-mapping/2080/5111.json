@@ -1,0 +1,12 @@
+{
+    "name": "fetter_story",
+    "fields": [
+        "id",
+        "fetter_id",
+        "actor",
+        "milestone",
+        "reward",
+        "name",
+        "description"
+    ]
+}

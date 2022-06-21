@@ -1,0 +1,7 @@
+{
+    "name": "chess_random_spot",
+    "fields": [
+        "id",
+        "spot_effect"
+    ]
+}

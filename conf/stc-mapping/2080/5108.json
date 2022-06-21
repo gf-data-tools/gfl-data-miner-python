@@ -1,0 +1,8 @@
+{
+    "name": "mail_content",
+    "fields": [
+        "id",
+        "title",
+        "content"
+    ]
+}

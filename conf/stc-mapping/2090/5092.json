@@ -1,0 +1,8 @@
+{
+    "name": "enemy_illustration_skill",
+    "fields": [
+        "id",
+        "name",
+        "description"
+    ]
+}

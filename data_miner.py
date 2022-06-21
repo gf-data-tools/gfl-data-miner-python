@@ -161,7 +161,8 @@ class DataMiner():
                     json.dump(data[key],f,indent=4,ensure_ascii=False)
         
     def process_stc(self):
-        mapping_dir = os.path.join('conf/stc-mapping',self.region)
+        mapping_dir = os.path.join('conf/stc-mapping',str(self.minversion))
+        logging.info(f'Read stc-mapping from {mapping_dir}')
         stc_dir = os.path.join(self.raw_dir,'stc')
         dst_dir = os.path.join(self.data_dir,'stc')
         os.makedirs(dst_dir,exist_ok=True)
