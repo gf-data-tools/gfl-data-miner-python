@@ -5,8 +5,8 @@ on:
     inputs:
       cmdargs:
         description: 'Commandline Arguments'     
-        required: true
-        default: ' tw kr jp us ch' 
+        required: false
+        default: 'tw kr jp us ch' 
         type: string
   schedule:
     - cron: '0 0/3 * * *'
@@ -30,6 +30,6 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
       - name: Data Miner
-        run: python data_miner.py ${{ inputs.cmdargs }} 
+        run: python data_miner.py ${{ inputs.cmdargs || 'tw kr jp us ch' }} 
       - name: Git Push
         run: git push
