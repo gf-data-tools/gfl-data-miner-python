@@ -1,9 +1,16 @@
-name: gfl-data-miner
+name: gfl-data-miner auto update bot
 
 on:
+  workflow_dispatch:
+    inputs:
+      cmdargs:
+        description: 'Commandline Arguments'     
+        required: true
+        default: ' tw kr jp us ch' 
+        type: string
   schedule:
     - cron: '0 0/3 * * *'
-  workflow_dispatch:
+    
 
 jobs:
   gfl-data-miner-workflow:
@@ -23,6 +30,6 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
       - name: Data Miner
-        run: python data_miner.py tw kr jp us ch 
+        run: python data_miner.py ${{ inputs.cmdargs }} 
       - name: Git Push
         run: git push
