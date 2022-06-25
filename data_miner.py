@@ -17,13 +17,14 @@ from zipfile import ZipFile
 from git import Git
 from git.repo import Repo
 import argparse
+from pathlib import Path
+os.chdir(Path(__file__).resolve().parent)
 
 CONFIG_JSON5 = r'conf/config.json5'
-RAW_ROOT = r'raw'
-DATA_ROOT = r'data'
-
 with open(CONFIG_JSON5,'r',encoding='utf-8') as f:
     conf = pyjson5.load(f)
+RAW_ROOT = r'raw'
+DATA_ROOT = conf['git']['local']
 
 # %%
 class DataMiner():
@@ -110,7 +111,7 @@ class DataMiner():
             self.process_stc()
             with open(os.path.join(self.data_dir,'version.json'),'w',encoding='utf-8') as f:
                 json.dump(self.version,f,indent=4,ensure_ascii=False)
-            git = Git('./data')
+            git = Git(DATA_ROOT)
             logging.info('committing')
             git.execute(f'git add {self.region}', shell=True)
             response = git.execute(f'git commit -m "[{self.region}] client {self.clientVersion} | ab {self.abVersion} | data {self.dataVersion}"', shell=True)
@@ -184,10 +185,7 @@ if __name__=='__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('region',nargs='+',choices=['ch','tw','kr','jp','us'])
     parser.add_argument('--force', '-f',action='store_true')
-    logging.info(f"Cloning gfl-data from {conf['data_repo']}")
-    data_git = Git('data')
-    if data_git.execute('git config remote.origin.url') != conf['data_repo']:
-        logging.info(data_git.execute(f"git clone {conf['data_repo']} data", shell=True))
+    data_git = Git(DATA_ROOT)
     args=parser.parse_args()
     for region in args.region:
         try:
