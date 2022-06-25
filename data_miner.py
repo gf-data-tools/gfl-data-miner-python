@@ -15,17 +15,20 @@ import re
 from gzip import GzipFile
 from zipfile import ZipFile
 from git import Git
+from git.repo import Repo
 import argparse
 
 CONFIG_JSON5 = r'conf/config.json5'
 RAW_ROOT = r'raw'
 DATA_ROOT = r'data'
+
+with open(CONFIG_JSON5,'r',encoding='utf-8') as f:
+    conf = pyjson5.load(f)
+
 # %%
 class DataMiner():
     def __init__(self,region='ch'):
         self.region=region
-        with open(CONFIG_JSON5,'r') as f:
-            conf = pyjson5.load(f)
         self.host = conf['hosts'][region]
         self.res_key = conf['res_key']
         self.res_iv = conf['res_iv']
@@ -58,7 +61,7 @@ class DataMiner():
         resdata_fp = os.path.join(self.raw_dir,'AndroidResConfigData')
         download(resdata_url,resdata_fp)
         unpack_all_assets(resdata_fp,self.raw_dir)
-        with open(os.path.join(self.raw_dir,'assets/resources/resdata.asset')) as f:
+        with open(os.path.join(self.raw_dir,'assets/resources/resdata.asset'),encoding='utf-8') as f:
             self.resdata = pyjson5.load(f)
         shutil.copy(os.path.join(self.raw_dir,'assets/resources/resdata.asset'),os.path.join(self.data_dir,'resdata.json'))
 
@@ -86,7 +89,7 @@ class DataMiner():
             if not os.path.exists(saved_version_fp):
                 available = True
             else:
-                with open(saved_version_fp) as f:
+                with open(saved_version_fp,encoding='utf-8') as f:
                     version = pyjson5.load(f)
                 if version["data_version"] != self.dataVersion:
                     available =True
@@ -105,11 +108,11 @@ class DataMiner():
             self.process_assets()
             self.process_catchdata()
             self.process_stc()
-            with open(os.path.join(self.data_dir,'version.json'),'w') as f:
+            with open(os.path.join(self.data_dir,'version.json'),'w',encoding='utf-8') as f:
                 json.dump(self.version,f,indent=4,ensure_ascii=False)
-            git = Git('./')
+            git = Git('./data')
             logging.info('committing')
-            git.execute(f'git add {self.data_dir}', shell=True)
+            git.execute(f'git add {self.region}', shell=True)
             response = git.execute(f'git commit -m "[{self.region}] client {self.clientVersion} | ab {self.abVersion} | data {self.dataVersion}"', shell=True)
             logging.info(response)
             shutil.rmtree(self.raw_dir)
@@ -150,14 +153,14 @@ class DataMiner():
             cipher = f.read()
         compressed = xor_decrypt(cipher,self.dat_key)
         plain = GzipFile(fileobj=io.BytesIO(compressed)).read().decode('utf-8')
-        with open(os.path.join(dst_dir,'catchdata'),'w') as f:
+        with open(os.path.join(dst_dir,'catchdata'),'w',encoding='utf-8') as f:
             f.write(plain)
         for json_string in plain.split('\n')[:-1]:
             data = json.loads(json_string)
             assert len(data.keys()) == 1
             for key in data.keys():
                 logging.info(f'Formatting {key}.json from catchdata')
-                with open(os.path.join(dst_dir,f'{key}.json'),'w') as f:
+                with open(os.path.join(dst_dir,f'{key}.json'),'w',encoding='utf-8') as f:
                     json.dump(data[key],f,indent=4,ensure_ascii=False)
         
     def process_stc(self):
@@ -173,7 +176,7 @@ class DataMiner():
             stc = os.path.join(stc_dir,f'{id}.stc')
             mapping = os.path.join(mapping_dir,f'{id}.json')
             name, data = format_stc(stc,mapping)
-            with open(os.path.join(dst_dir, f'{name}.json'),'w') as f:
+            with open(os.path.join(dst_dir, f'{name}.json'),'w',encoding='utf-8') as f:
                 json.dump(data,f,indent=4,ensure_ascii=False)
 
 # %%
@@ -181,8 +184,17 @@ if __name__=='__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('region',nargs='+',choices=['ch','tw','kr','jp','us'])
     parser.add_argument('--force', '-f',action='store_true')
+    logging.info(f"Cloning gfl-data from {conf['data_repo']}")
+    data_git = Git('data')
+    if data_git.execute('git config remote.origin.url') != conf['data_repo']:
+        logging.info(data_git.execute(f"git clone {conf['data_repo']} data", shell=True))
     args=parser.parse_args()
     for region in args.region:
-        logging.basicConfig(level='INFO',format=f'%(asctime)s %(levelname)s: [{region.upper()}] %(message)s',force=True)
-        data_miner = DataMiner(region)
-        data_miner.update_raw_resource(args.force)
+        try:
+            logging.basicConfig(level='INFO',format=f'%(asctime)s %(levelname)s: [{region.upper()}] %(message)s',force=True)
+            data_miner = DataMiner(region)
+            data_miner.update_raw_resource(args.force)
+        except Exception as e:
+            logging.error(f"Extraction failed due to {e}")
+    logging.info(data_git.execute('git push', shell=True))
+# %%

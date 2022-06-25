@@ -4,6 +4,7 @@ import struct
 import os
 import json
 from collections import OrderedDict
+import numpy as np
 
 # %%
 class StcReader:
@@ -31,7 +32,8 @@ class StcReader:
         
     def read_float(self):
         b = self.file.read(4)
-        return struct.unpack('<f',b)[0]
+        f32 = struct.unpack('<f',b)[0]
+        return float('%g'%f32)
 
     def read_str(self):
         self.skip_bytes(1)
