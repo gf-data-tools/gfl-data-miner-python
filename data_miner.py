@@ -185,7 +185,6 @@ if __name__=='__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('region',nargs='+',choices=['ch','tw','kr','jp','us'])
     parser.add_argument('--force', '-f',action='store_true')
-    data_git = Git(DATA_ROOT)
     args=parser.parse_args()
     for region in args.region:
         try:
@@ -194,5 +193,4 @@ if __name__=='__main__':
             data_miner.update_raw_resource(args.force)
         except Exception as e:
             logging.error(f"Extraction failed due to {e}")
-    logging.info(data_git.execute('git push', shell=True))
 # %%
