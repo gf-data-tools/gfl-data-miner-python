@@ -18,6 +18,9 @@ from git import Git
 from git.repo import Repo
 import argparse
 from pathlib import Path
+from gf_utils.stc_data import get_stc_data
+import pandas as pd
+
 os.chdir(Path(__file__).resolve().parent)
 
 CONFIG_JSON5 = r'conf/config.json5'
@@ -109,6 +112,7 @@ class DataMiner():
             self.process_assets()
             self.process_catchdata()
             self.process_stc()
+            self.format_csv()
             with open(os.path.join(self.data_dir,'version.json'),'w',encoding='utf-8') as f:
                 json.dump(self.version,f,indent=4,ensure_ascii=False)
             git = Git(DATA_ROOT)
@@ -179,6 +183,17 @@ class DataMiner():
             name, data = format_stc(stc,mapping)
             with open(os.path.join(dst_dir, f'{name}.json'),'w',encoding='utf-8') as f:
                 json.dump(data,f,indent=4,ensure_ascii=False)
+
+    def format_csv(self):
+        output_dir = os.path.join(self.data_dir,'csv') 
+        os.makedirs(output_dir,exist_ok=True)
+        table_dir = os.path.join(self.data_dir,'asset/table')
+        for j in ['catchdata','stc']:
+            json_dir = os.path.join(self.data_dir,j)
+            data = get_stc_data(json_dir, table_dir,to_dict=False)
+            for key, value in data.items():
+                pd.DataFrame.from_records(value).to_csv(os.path.join(output_dir,f'{key}.csv'),index=False)
+
 
 # %%
 if __name__=='__main__':

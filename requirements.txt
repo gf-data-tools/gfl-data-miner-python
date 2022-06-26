@@ -2,3 +2,5 @@ GitPython
 pyjson5
 UnityPy==1.8.9
 pycryptodome
+pandas
+git+https://github.com/gf-data-tools/GF_Data_Tools.git
