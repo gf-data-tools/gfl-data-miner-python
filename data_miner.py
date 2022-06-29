@@ -20,6 +20,7 @@ import argparse
 from pathlib import Path
 from gf_utils.stc_data import get_stc_data
 import pandas as pd
+import traceback
 
 os.chdir(Path(__file__).resolve().parent)
 
@@ -207,5 +208,6 @@ if __name__=='__main__':
             data_miner = DataMiner(region)
             data_miner.update_raw_resource(args.force)
         except Exception as e:
+            logging.error(traceback.format_exc())
             logging.error(f"Extraction failed due to {e}")
 # %%
