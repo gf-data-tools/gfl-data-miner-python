@@ -113,7 +113,6 @@ class DataMiner():
             self.process_assets()
             self.process_catchdata()
             self.process_stc()
-            self.format_csv()
             self.format_json()
             with open(os.path.join(self.data_dir,'version.json'),'w',encoding='utf-8') as f:
                 json.dump(self.version,f,indent=4,ensure_ascii=False)
@@ -197,7 +196,7 @@ class DataMiner():
                 pd.DataFrame.from_records(value).to_csv(os.path.join(output_dir,f'{key}.csv'),index=False)
 
     def format_json(self):
-        output_dir = os.path.join(self.data_dir,'json') 
+        output_dir = os.path.join(self.data_dir,'json_with_text') 
         os.makedirs(output_dir,exist_ok=True)
         table_dir = os.path.join(self.data_dir,'asset/table')
         for j in ['catchdata','stc']:
