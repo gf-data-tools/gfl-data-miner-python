@@ -69,6 +69,11 @@ class DataMiner():
         with open(os.path.join(self.raw_dir,'assets/resources/resdata.asset'),encoding='utf-8') as f:
             self.resdata = pyjson5.load(f)
         shutil.copy(os.path.join(self.raw_dir,'assets/resources/resdata.asset'),os.path.join(self.data_dir,'resdata.json'))
+        for k in ['passivityAssetBundles', 'BaseAssetBundles', 'AddAssetBundles']:
+            for r in self.resdata[k]:
+                r.pop("assetAllRes")
+        with open(os.path.join(self.data_dir,'resdata_noasset.json'),'w',encoding='utf-8') as f:
+            json.dump(self.resdata,f,indent=4,ensure_ascii=False)
 
     def get_asset_bundles(self):
         res_url = self.resdata['resUrl']
