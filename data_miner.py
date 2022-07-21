@@ -52,7 +52,6 @@ class DataMiner():
         self.clientVersion = version["client_version"]
         self.minversion = round(eval(self.clientVersion)/100) * 10
         self.abVersion = version["ab_version"]
-        logging.info(f'client {self.clientVersion} | ab {self.abVersion} | data {self.dataVersion}')
 
     def get_res_data(self):
         bkey = base64.standard_b64decode(self.res_key)
@@ -68,6 +67,9 @@ class DataMiner():
         unpack_all_assets(resdata_fp,self.raw_dir)
         with open(os.path.join(self.raw_dir,'assets/resources/resdata.asset'),encoding='utf-8') as f:
             self.resdata = pyjson5.load(f)
+        self.daBaoTime=self.resdata['daBaoTime']
+    
+    def process_resdata(self):
         shutil.copy(os.path.join(self.raw_dir,'assets/resources/resdata.asset'),os.path.join(self.data_dir,'resdata.json'))
         for k in ['passivityAssetBundles', 'BaseAssetBundles', 'AddAssetBundles']:
             for r in self.resdata[k]:
@@ -95,6 +97,9 @@ class DataMiner():
     
     def update_raw_resource(self, force=False):
         self.get_current_version()
+        self.get_res_data()
+        logging.info(f"[{self.region}] client {self.clientVersion} | ab {self.abVersion} | dabao {self.daBaoTime} | data {self.dataVersion}")
+            
         available = False
         if not force:
             saved_version_fp = os.path.join(self.data_dir,'version.json')
@@ -105,6 +110,14 @@ class DataMiner():
                     version = pyjson5.load(f)
                 if version["data_version"] != self.dataVersion:
                     available =True
+            saved_resdata_fp = os.path.join(self.data_dir,'resdata.json')
+            if not os.path.exists(saved_resdata_fp):
+                available = True
+            else:
+                with open(saved_resdata_fp,encoding='utf-8') as f:
+                    resdata = pyjson5.load(f)
+                if resdata["daBaoTime"] != self.daBaoTime:
+                    available =True
         else:
             available = True
 
@@ -114,9 +127,9 @@ class DataMiner():
                     shutil.rmtree(dir)
                 os.makedirs(dir)
             logging.info('new data available, start downloading')
-            self.get_res_data()
             self.get_asset_bundles()
             self.get_stc()
+            self.process_resdata()
             self.process_assets()
             self.process_catchdata()
             self.process_stc()
@@ -126,7 +139,7 @@ class DataMiner():
             git = Git(DATA_ROOT)
             logging.info('committing')
             git.execute(f'git add {self.region}', shell=True)
-            response = git.execute(f'git commit -m "[{self.region}] client {self.clientVersion} | ab {self.abVersion} | data {self.dataVersion}"', shell=True)
+            response = git.execute(f'git commit -m "[{self.region}] client {self.clientVersion} | ab {self.abVersion} | dabao {self.daBaoTime} | data {self.dataVersion}"', shell=True)
             logging.info(response)
             shutil.rmtree(self.raw_dir)
         else:
