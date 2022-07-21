@@ -71,8 +71,10 @@ class DataMiner():
         shutil.copy(os.path.join(self.raw_dir,'assets/resources/resdata.asset'),os.path.join(self.data_dir,'resdata.json'))
         for k in ['passivityAssetBundles', 'BaseAssetBundles', 'AddAssetBundles']:
             for r in self.resdata[k]:
-                r.pop("assetAllRes")
-        with open(os.path.join(self.data_dir,'resdata_noasset.json'),'w',encoding='utf-8') as f:
+                for a in r["assetAllRes"]:
+                    a.pop("hashCode",None)
+                    a.pop("hasCodes",None)
+        with open(os.path.join(self.data_dir,'resdata_no_hash.json'),'w',encoding='utf-8') as f:
             json.dump(self.resdata,f,indent=4,ensure_ascii=False)
 
     def get_asset_bundles(self):
