@@ -96,6 +96,9 @@ class DataMiner():
         ZipFile(stc_fp).extractall(os.path.join(self.raw_dir,'stc'))
     
     def update_raw_resource(self, force=False):
+        if os.path.exists(self.raw_dir):
+            shutil.rmtree(self.raw_dir)
+        os.makedirs(self.raw_dir)
         self.get_current_version()
         self.get_res_data()
         logging.info(f"[{self.region}] client {self.clientVersion} | ab {self.abVersion} | dabao {self.daBaoTime} | data {self.dataVersion}")
@@ -122,10 +125,9 @@ class DataMiner():
             available = True
 
         if available:
-            for dir in [self.raw_dir, self.data_dir]:
-                if os.path.exists(dir):
-                    shutil.rmtree(dir)
-                os.makedirs(dir)
+            if os.path.exists(self.data_dir):
+                shutil.rmtree(self.data_dir)
+            os.makedirs(self.data_dir)
             logging.info('new data available, start downloading')
             self.get_asset_bundles()
             self.get_stc()
