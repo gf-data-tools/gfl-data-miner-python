@@ -43,20 +43,28 @@ class DataMiner():
         self.data_dir = os.path.join(DATA_ROOT,region)
 
     def get_current_version(self):
+        logging.info(f'Requesting version')
         version_url = self.host['game_host'] + '/Index/version'
-        logging.info(f'requesting version from {version_url}')
-        response = request.urlopen(version_url)
-        version = pyjson5.loads(response.read().decode())
+        response = request.urlopen(version_url).read().decode()
+        logging.info(f'Response: {response}')
+        version = pyjson5.loads(response)
         self.version = {k:v for k,v in version.items() if 'version' in k}
         self.dataVersion = version["data_version"]
         self.clientVersion = version["client_version"]
-        self.minversion = round(eval(self.clientVersion)/100) * 10
+        if len(self.clientVersion)==5:
+            self.minversion = round(eval(self.clientVersion)/100) * 10
+        else:
+            self.minversion = eval(self.clientVersion)
         self.abVersion = version["ab_version"]
 
     def get_res_data(self):
+        logging.info(f'Getting resource data list')
         bkey = base64.standard_b64decode(self.res_key)
-        biv = base64.standard_b64decode(self.res_iv)
-        fname = f"{self.minversion}_{self.abVersion}_AndroidResConfigData"
+        biv = base64.standard_b64decode(self.res_iv)        
+        if self.region=='cht':
+            fname = f"{self.minversion}_alpha2020_{self.abVersion}_AndroidResConfigData"
+        else:
+            fname = f"{self.minversion}_{self.abVersion}_AndroidResConfigData"
 
         en = get_des_encrypted(fname,bkey,biv[:8])
         res_config = base64.standard_b64encode(en).decode('utf-8')
@@ -71,6 +79,7 @@ class DataMiner():
         self.version['dabao_time'] = self.resdata['daBaoTime']
     
     def process_resdata(self):
+        logging.info('Processing resdata')
         shutil.copy(os.path.join(self.raw_dir,'assets/resources/resdata.asset'),os.path.join(self.data_dir,'resdata.json'))
         for k in ['passivityAssetBundles', 'BaseAssetBundles', 'AddAssetBundles']:
             for r in self.resdata[k]:
@@ -130,30 +139,38 @@ class DataMiner():
             available = True
 
         if available:
-            if os.path.exists(self.data_dir):
-                shutil.rmtree(self.data_dir)
-            os.makedirs(self.data_dir)
-            logging.info('new data available, start downloading')
+            os.makedirs(self.data_dir,exist_ok=True)
+            logging.info('New data available, start downloading')
             self.get_asset_bundles()
             self.get_stc()
             self.process_resdata()
             self.process_assets()
             self.process_catchdata()
             self.process_stc()
+            logging.info('Formatting json_with_text')
             self.format_json()
             with open(os.path.join(self.data_dir,'version.json'),'w',encoding='utf-8') as f:
                 json.dump(self.version,f,indent=4,ensure_ascii=False)
-            git = Git(DATA_ROOT)
-            logging.info('committing')
-            git.execute(f'git add {self.region}', shell=True)
-            response = git.execute(f'git commit -m "{self.version_str}"', shell=True)
-            logging.info(response)
+
+            git = Git(os.path.join(DATA_ROOT,self.region))
+            git.add(A=True, shell=True)
+            if git.diff():
+                logging.info('Committing')
+                response = git.commit(m=f"{self.version_str}", shell=True)
+                logging.info(response)
+                git_parent = Git(os.path.join(DATA_ROOT,self.region))
+                git_parent.add(A=True, shell=True)
+                if git_parent.diff():
+                    git_parent.commit(m=f"{self.version_str}", shell=True)
+            else:
+                logging.info('Nothing new, skip committing')
             shutil.rmtree(self.raw_dir)
         else:
             logging.info('current data is up to date')
         return available
         
     def process_assets(self):
+        logging.info('Processing assets')
         for asset in ['asset_textavg','asset_texttable','asset_textes']:
             unpack_all_assets(os.path.join(self.raw_dir,asset+'.ab'),self.raw_dir)
         asset_output = os.path.join(self.data_dir,'asset')
@@ -164,12 +181,13 @@ class DataMiner():
         self.decode_luapatch()
 
     def decode_luapatch(self):
+        logging.info('Decrypting lua')
         src_dir = os.path.join(self.data_dir,'asset/luapatch')
         for root,dirs,files in os.walk(src_dir):
             for file in files:
                 if not file.endswith('txt'):
                     continue
-                logging.info(f'decoding {file}')
+                logging.debug(f'decoding {file}')
                 with open(os.path.join(root,file),'rb') as f:
                     cipher = f.read()
                 plain = xor_decrypt(cipher,self.lua_key)
@@ -179,7 +197,7 @@ class DataMiner():
 
      
     def process_catchdata(self):
-        logging.info(f'decoding catchdata')
+        logging.info(f'Decoding catchdata')
         dst_dir = os.path.join(self.data_dir,'catchdata')
         os.makedirs(dst_dir,exist_ok=True)
         with open(os.path.join(self.raw_dir,'stc/catchdata.dat'),'rb') as f:
@@ -188,24 +206,27 @@ class DataMiner():
         plain = GzipFile(fileobj=io.BytesIO(compressed)).read().decode('utf-8')
         with open(os.path.join(dst_dir,'catchdata'),'w',encoding='utf-8') as f:
             f.write(plain)
+        logging.info(f'Extracting json from catchdata')
         for json_string in plain.split('\n')[:-1]:
             data = json.loads(json_string)
             assert len(data.keys()) == 1
             for key in data.keys():
-                logging.info(f'Formatting {key}.json from catchdata')
+                logging.debug(f'Formatting {key}.json')
                 with open(os.path.join(dst_dir,f'{key}.json'),'w',encoding='utf-8') as f:
                     json.dump(data[key],f,indent=4,ensure_ascii=False)
         
     def process_stc(self):
         mapping_dir = os.path.join('conf/stc-mapping',str(self.minversion))
-        logging.info(f'Read stc-mapping from {mapping_dir}')
+        logging.info(f'Reading stc-mapping from {mapping_dir}')
         stc_dir = os.path.join(self.raw_dir,'stc')
         dst_dir = os.path.join(self.data_dir,'stc')
         os.makedirs(dst_dir,exist_ok=True)
 
-        for f in os.listdir(mapping_dir):
+        logging.info(f'Formating json from stc files')
+        for f in os.listdir(stc_dir):
             id, ext = os.path.splitext(f)
-            assert ext=='.json'
+            if ext!='.stc':
+                continue
             stc = os.path.join(stc_dir,f'{id}.stc')
             mapping = os.path.join(mapping_dir,f'{id}.json')
             name, data = format_stc(stc,mapping)
@@ -223,6 +244,7 @@ class DataMiner():
                 pd.DataFrame.from_records(value).to_csv(os.path.join(output_dir,f'{key}.csv'),index=False)
 
     def format_json(self):
+        logging.info('Loading texttable into json files')
         output_dir = os.path.join(self.data_dir,'json_with_text') 
         os.makedirs(output_dir,exist_ok=True)
         table_dir = os.path.join(self.data_dir,'asset/table')
@@ -237,12 +259,13 @@ class DataMiner():
 # %%
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('region',nargs='+',choices=['ch','tw','kr','jp','us'])
+    parser.add_argument('region',nargs='+',choices=conf['hosts'].keys())
     parser.add_argument('--force', '-f',action='store_true')
+    parser.add_argument('--loglevel',default='INFO',choices=['DEBUG','INFO','WARNING','ERROR','CRITICAL'])
     args=parser.parse_args()
     for region in args.region:
         try:
-            logging.basicConfig(level='INFO',format=f'%(asctime)s %(levelname)s: [{region.upper()}] %(message)s',force=True)
+            logging.basicConfig(level=args.loglevel,format=f'%(asctime)s %(levelname)s: [{region.upper()}] %(message)s',force=True)
             data_miner = DataMiner(region)
             data_miner.update_raw_resource(args.force)
         except Exception as e:

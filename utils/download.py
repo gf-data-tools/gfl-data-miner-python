@@ -11,14 +11,14 @@ def download(url, path):
     for _ in range(10):
         try:
             if not os.path.exists(path):
-                logging.info(f'start downloading {url} to {path}')
+                logging.debug(f'start downloading {url} to {path}')
                 request.urlretrieve(url,path+'.tmp')
                 os.rename(path+'.tmp',path)
-                logging.info(f'successfully downloaded {path}')
+                logging.debug(f'successfully downloaded {path}')
             else:
-                logging.info(f'{path} already exists, skip downloading')
+                logging.warning(f'{path} already exists, skip downloading')
         except Exception as e:
-            logging.warning(f'download {url} failed, retrying')
+            logging.warning(f'download {path} failed, retrying')
             logging.warning(f'Exception: {e}')
             continue
         else:

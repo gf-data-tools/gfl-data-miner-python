@@ -62,14 +62,14 @@ def format_stc(stc: str, mapping:str):
     reader = StcReader(stc)
     code = reader.read_ushort()
     reader.skip_bytes(2)
-    logging.info(f'reading {os.path.split(stc)[-1]}, code {code}')
+    logging.debug(f'reading {os.path.split(stc)[-1]}, code {code}')
     data = list()
     
     row = reader.read_ushort()
     if row == 0:
         return stc_conf["name"], data
     col = reader.read_byte()
-    logging.info(f'col {col}, row {row}')
+    logging.debug(f'col {col}, row {row}')
     
     type_ids = []
     for _ in range(col):
@@ -77,7 +77,7 @@ def format_stc(stc: str, mapping:str):
     assert len(type_ids) == len(stc_conf['fields'])
 
     format = {stc_conf['fields'][i]: {1:'byte',5:'int',8:'long',9:'float',11:'string'}[type_ids[i]] for i in range(col)}
-    logging.info(f'{stc_conf["name"]}: {format}')
+    logging.debug(f'{stc_conf["name"]}: {format}')
 
     reader.skip_bytes(4)
     offset = reader.read_int()
