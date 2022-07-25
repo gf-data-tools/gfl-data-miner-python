@@ -47,7 +47,7 @@ class DataMiner():
         logging.info(f'requesting version from {version_url}')
         response = request.urlopen(version_url)
         version = pyjson5.loads(response.read().decode())
-        self.version = version
+        self.version = {k:v for k,v in version.items() if 'version' in k}
         self.dataVersion = version["data_version"]
         self.clientVersion = version["client_version"]
         self.minversion = round(eval(self.clientVersion)/100) * 10
@@ -68,6 +68,7 @@ class DataMiner():
         with open(os.path.join(self.raw_dir,'assets/resources/resdata.asset'),encoding='utf-8') as f:
             self.resdata = pyjson5.load(f)
         self.daBaoTime=self.resdata['daBaoTime']
+        self.version['dabao_time'] = self.resdata['daBaoTime']
     
     def process_resdata(self):
         shutil.copy(os.path.join(self.raw_dir,'assets/resources/resdata.asset'),os.path.join(self.data_dir,'resdata.json'))
@@ -95,13 +96,17 @@ class DataMiner():
         download(stc_url,stc_fp)
         ZipFile(stc_fp).extractall(os.path.join(self.raw_dir,'stc'))
     
+    @property
+    def version_str(self):
+        return f"[{self.region}] {self.clientVersion} | data {self.dataVersion[:7]} | dabao {self.daBaoTime[:14]}"
+        
     def update_raw_resource(self, force=False):
         if os.path.exists(self.raw_dir):
             shutil.rmtree(self.raw_dir)
         os.makedirs(self.raw_dir)
         self.get_current_version()
         self.get_res_data()
-        logging.info(f"[{self.region}] client {self.clientVersion} | ab {self.abVersion} | dabao {self.daBaoTime} | data {self.dataVersion}")
+        logging.info(self.version_str)
             
         available = False
         if not force:
@@ -141,7 +146,7 @@ class DataMiner():
             git = Git(DATA_ROOT)
             logging.info('committing')
             git.execute(f'git add {self.region}', shell=True)
-            response = git.execute(f'git commit -m "[{self.region}] client {self.clientVersion} | ab {self.abVersion} | dabao {self.daBaoTime} | data {self.dataVersion}"', shell=True)
+            response = git.execute(f'git commit -m "{self.version_str}"', shell=True)
             logging.info(response)
             shutil.rmtree(self.raw_dir)
         else:
