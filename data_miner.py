@@ -154,13 +154,13 @@ class DataMiner():
 
             git = Git(os.path.join(DATA_ROOT,self.region))
             git.add(A=True, shell=True)
-            if git.diff():
+            if git.diff_index('HEAD'):
                 logging.info('Committing')
                 response = git.commit(m=f"{self.version_str}", shell=True)
                 logging.info(response)
-                git_parent = Git(os.path.join(DATA_ROOT,self.region))
+                git_parent = Git(DATA_ROOT)
                 git_parent.add(A=True, shell=True)
-                if git_parent.diff():
+                if git_parent.diff_index('HEAD'):
                     git_parent.commit(m=f"{self.version_str}", shell=True)
             else:
                 logging.info('Nothing new, skip committing')
