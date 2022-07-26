@@ -152,18 +152,17 @@ class DataMiner():
             with open(os.path.join(self.data_dir,'version.json'),'w',encoding='utf-8') as f:
                 json.dump(self.version,f,indent=4,ensure_ascii=False)
 
-            git = Git(os.path.join(DATA_ROOT,self.region))
-            git.add(A=True, shell=True)
-            if git.diff_index('HEAD'):
-                logging.info('Committing')
-                response = git.commit(m=f"{self.version_str}", shell=True)
-                logging.info(response)
-                git_parent = Git(DATA_ROOT)
-                git_parent.add(A=True, shell=True)
-                if git_parent.diff_index('HEAD'):
+            if conf['git_update']:
+                git = Git(os.path.join(DATA_ROOT,self.region))
+                git.add('.', shell=True)
+                if git.diff_index('HEAD'):
+                    logging.info('Committing')
+                    git.commit(m=f"{self.version_str}", shell=True)
+                    git_parent = Git(DATA_ROOT)
+                    git_parent.add(f'{self.region}', shell=True)
                     git_parent.commit(m=f"{self.version_str}", shell=True)
-            else:
-                logging.info('Nothing new, skip committing')
+                else:
+                    logging.info('Nothing new, skip committing')
             shutil.rmtree(self.raw_dir)
         else:
             logging.info('current data is up to date')
