@@ -157,10 +157,10 @@ class DataMiner():
                 git.execute('git add .', shell=True)
                 if git.diff_index('HEAD'):
                     logging.info('Committing')
-                    git.execute(f"git commit -m {self.version_str}", shell=True)
+                    git.execute(f'git commit -m "{self.version_str}"', shell=True)
                     git_parent = Git(DATA_ROOT)
                     git_parent.execute(f'git add {self.region}', shell=True)
-                    git_parent.execute(f"git commit -m {self.version_str}", shell=True)
+                    git_parent.execute(f'git commit -m "{self.version_str}"', shell=True)
                 else:
                     logging.info('Nothing new, skip committing')
             shutil.rmtree(self.raw_dir)
