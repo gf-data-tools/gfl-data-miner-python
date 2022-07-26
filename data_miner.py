@@ -34,13 +34,18 @@ DATA_ROOT = conf['git']['local']
 class DataMiner():
     def __init__(self,region='ch'):
         self.region=region
-        self.host = conf['hosts'][region]
+        self.raw_dir = os.path.join(RAW_ROOT,region)
+        self.data_dir = os.path.join(DATA_ROOT,region)
+        hosts = os.path.join(self.data_dir,'hosts.json5')
+        if os.path.isfile(hosts):
+            with open(hosts,'r') as f:
+                self.host = pyjson5.load(f)
+        else:
+            self.host = conf['hosts'][region]
         self.res_key = conf['res_key']
         self.res_iv = conf['res_iv']
         self.lua_key = conf['lua_key']
         self.dat_key = conf['dat_key']
-        self.raw_dir = os.path.join(RAW_ROOT,region)
-        self.data_dir = os.path.join(DATA_ROOT,region)
 
     def get_current_version(self):
         logging.info(f'Requesting version')
@@ -258,7 +263,7 @@ class DataMiner():
 # %%
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('region',nargs='+',choices=conf['hosts'].keys())
+    parser.add_argument('region',nargs='+',choices=['ch','tw','kr','us','jp','at'])
     parser.add_argument('--force', '-f',action='store_true')
     parser.add_argument('--loglevel',default='INFO',choices=['DEBUG','INFO','WARNING','ERROR','CRITICAL'])
     args=parser.parse_args()
