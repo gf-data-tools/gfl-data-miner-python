@@ -1,7 +1,0 @@
-{
-    "name": "fairy_talent_type",
-    "fields": [
-        "id",
-        "name"
-    ]
-}

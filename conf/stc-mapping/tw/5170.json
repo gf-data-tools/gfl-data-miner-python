@@ -1,9 +1,0 @@
-{
-    "name": "fairy_talent",
-    "fields": [
-        "id",
-        "rank",
-        "type_id",
-        "name"
-    ]
-}

@@ -1,9 +1,0 @@
-{
-    "name": "battle_skill_type_config",
-    "fields": [
-        "id",
-        "charge_time",
-        "charge_tier",
-        "start_charge_tier"
-    ]
-}

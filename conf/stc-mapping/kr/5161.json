@@ -1,9 +1,0 @@
-{
-    "name": "equip_category",
-    "fields": [
-        "category",
-        "name",
-        "en_name",
-        "code"
-    ]
-}

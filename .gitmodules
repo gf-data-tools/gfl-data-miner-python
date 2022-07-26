@@ -1,0 +1,3 @@
+[submodule "conf/stc-mapping/3010"]
+	path = conf/stc-mapping/3010
+	url = https://github.com/gf-data-tools/gf-stcmap-3010.git

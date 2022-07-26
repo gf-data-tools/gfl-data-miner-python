@@ -1,9 +1,0 @@
-{
-    "name": "organization_bounty",
-    "fields": [
-        "id",
-        "org_id",
-        "reward",
-        "quantity"
-    ]
-}

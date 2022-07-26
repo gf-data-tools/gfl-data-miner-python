@@ -1,9 +1,0 @@
-{
-    "name": "chat_channel",
-    "fields": [
-        "id",
-        "name",
-        "if_input",
-        "is_fixed_phrases"
-    ]
-}
