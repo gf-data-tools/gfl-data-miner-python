@@ -30,6 +30,7 @@
     res_iv: 'M9lp+7j2Jdwqr+Yj1h+A',
     lua_key: 'lvbb3zfc3faa8mq1rx0r0gl61b4338fa',
     dat_key: 'c88d016d261eb80ce4d6e41a510d4048',
+    git_update: true,
     git:{
         remote: 'https://github.com/gf-data-tools/gfl-data.git',
         local: '../data'
