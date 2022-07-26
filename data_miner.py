@@ -154,12 +154,12 @@ class DataMiner():
 
             if conf['git_update']:
                 git = Git(os.path.join(DATA_ROOT,self.region))
-                git.add('.', shell=True)
+                git.execute('git add .', shell=True)
                 if git.diff_index('HEAD'):
                     logging.info('Committing')
                     git.commit(m=f"{self.version_str}", shell=True)
                     git_parent = Git(DATA_ROOT)
-                    git_parent.add(f'{self.region}', shell=True)
+                    git_parent.execute(f'git add {self.region}', shell=True)
                     git_parent.commit(m=f"{self.version_str}", shell=True)
                 else:
                     logging.info('Nothing new, skip committing')
