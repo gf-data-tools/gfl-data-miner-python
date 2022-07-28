@@ -112,7 +112,7 @@ class DataMiner():
     
     @property
     def version_str(self):
-        return f"[{self.region}] {self.clientVersion} | data {self.dataVersion[:7]} | dabao {self.daBaoTime[:14]}"
+        return f"[{self.region.upper()}] {self.clientVersion} | data {self.dataVersion[:7]} | dabao {self.daBaoTime[:14]}"
         
     def update_raw_resource(self, force=False):
         if os.path.exists(self.raw_dir):
@@ -269,6 +269,7 @@ if __name__=='__main__':
     parser.add_argument('--loglevel',default='INFO',choices=['DEBUG','INFO','WARNING','ERROR','CRITICAL'])
     args=parser.parse_args()
     for region in args.region:
+        print(f"::group::{region.upper()} Server")
         try:
             logging.basicConfig(level=args.loglevel,format=f'%(asctime)s %(levelname)s: [{region.upper()}] %(message)s',force=True)
             data_miner = DataMiner(region)
@@ -276,4 +277,5 @@ if __name__=='__main__':
         except Exception as e:
             logging.error(traceback.format_exc())
             logging.error(f"Extraction failed due to {e}")
+        print("::endgroup::")
 # %%
