@@ -21,6 +21,7 @@ from pathlib import Path
 from gf_utils.stc_data import get_stc_data
 import pandas as pd
 import traceback
+import sys
 
 os.chdir(Path(__file__).resolve().parent)
 
@@ -271,7 +272,7 @@ if __name__=='__main__':
     for region in args.region:
         print(f"::group::{region.upper()} Server")
         try:
-            logging.basicConfig(level=args.loglevel,format=f'%(asctime)s %(levelname)s: [{region.upper()}] %(message)s',force=True)
+            logging.basicConfig(level=args.loglevel,stream=sys.stdout,format=f'%(asctime)s %(levelname)s: [{region.upper()}] %(message)s',force=True)
             data_miner = DataMiner(region)
             data_miner.update_raw_resource(args.force)
         except Exception as e:
