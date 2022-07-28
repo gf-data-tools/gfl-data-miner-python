@@ -166,6 +166,7 @@ class DataMiner():
                     git_parent = Git(DATA_ROOT)
                     git_parent.execute(f'git add {self.region}', shell=True)
                     git_parent.execute(f'git commit -m "{self.version_str}"', shell=True)
+                    print('::set-output name=has-new-commits::true')
                 else:
                     logging.info('Nothing new, skip committing')
             shutil.rmtree(self.raw_dir)
