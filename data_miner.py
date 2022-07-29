@@ -97,7 +97,7 @@ class DataMiner():
 
     def get_asset_bundles(self):
         res_url = self.resdata['resUrl']
-        targets = ['asset_textavg','asset_texttable','asset_textes']
+        targets = ['asset_textavg','asset_texttable','asset_textes','asset_textlangue']
         for ab_info in self.resdata['BaseAssetBundles']:
             if ab_info['assetBundleName'] in targets:
                 ab_url = f'{res_url}{ab_info["resname"]}.ab'
@@ -177,13 +177,14 @@ class DataMiner():
         
     def process_assets(self):
         logging.info('Processing assets')
-        for asset in ['asset_textavg','asset_texttable','asset_textes']:
+        for asset in ['asset_textavg','asset_texttable','asset_textes','asset_textlangue']:
             unpack_all_assets(os.path.join(self.raw_dir,asset+'.ab'),self.raw_dir)
         asset_output = os.path.join(self.data_dir,'asset')
         os.makedirs(asset_output,exist_ok=True)
         asset_dir = os.path.join(self.raw_dir,'assets/resources/dabao')
         for subdir in os.listdir(asset_dir):
             shutil.copytree(os.path.join(asset_dir,subdir),os.path.join(asset_output,subdir),dirs_exist_ok=True)
+        shutil.copytree(os.path.join(self.raw_dir,'assets/resources/textdata/language'),os.path.join(asset_output,'language'),dirs_exist_ok=True)
         self.decode_luapatch()
 
     def decode_luapatch(self):
