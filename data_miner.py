@@ -22,6 +22,7 @@ from gf_utils.stc_data import get_stc_data
 import pandas as pd
 import traceback
 import sys
+import hjson
 
 os.chdir(Path(__file__).resolve().parent)
 
@@ -153,8 +154,7 @@ class DataMiner():
             self.process_assets()
             self.process_catchdata()
             self.process_stc()
-            logging.info('Formatting json_with_text')
-            self.format_json()
+            self.format_hjson()
             with open(os.path.join(self.data_dir,'version.json'),'w',encoding='utf-8') as f:
                 json.dump(self.version,f,indent=4,ensure_ascii=False)
 
@@ -261,6 +261,18 @@ class DataMiner():
             for key, value in data.items():
                 with open(os.path.join(output_dir,f'{key}.json'),'w',encoding='utf-8') as f:
                     json.dump(value,f,ensure_ascii=False,indent=4)
+
+    def format_hjson(self):
+        logging.info('Loading texttable into hjson files')
+        output_dir = os.path.join(self.data_dir,'data_hjson') 
+        os.makedirs(output_dir,exist_ok=True)
+        table_dir = os.path.join(self.data_dir,'asset/table')
+        for j in ['catchdata','stc']:
+            json_dir = os.path.join(self.data_dir,j)
+            data = get_stc_data(json_dir, table_dir,to_dict=False)
+            for key, value in data.items():
+                with open(os.path.join(output_dir,f'{key}.hjson'),'w',encoding='utf-8') as f:
+                    hjson.dump(value,f)
 
 
 # %%
