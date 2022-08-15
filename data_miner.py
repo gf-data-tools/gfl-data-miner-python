@@ -147,6 +147,7 @@ class DataMiner():
 
         if available:
             os.makedirs(self.data_dir,exist_ok=True)
+            self.remove_old_data()
             logging.info('New data available, start downloading')
             self.get_asset_bundles()
             self.get_stc()
@@ -154,6 +155,7 @@ class DataMiner():
             self.process_assets()
             self.process_catchdata()
             self.process_stc()
+            self.format_json()
             self.format_hjson()
             with open(os.path.join(self.data_dir,'version.json'),'w',encoding='utf-8') as f:
                 json.dump(self.version,f,indent=4,ensure_ascii=False)
@@ -174,6 +176,11 @@ class DataMiner():
         else:
             logging.info('current data is up to date')
         return available
+    
+    def remove_old_data(self):
+        for content in Path(self.data_dir).iterdir():
+            if content.is_dir():
+                shutil.rmtree(content)
         
     def process_assets(self):
         logging.info('Processing assets')
@@ -252,7 +259,7 @@ class DataMiner():
 
     def format_json(self):
         logging.info('Loading texttable into json files')
-        output_dir = os.path.join(self.data_dir,'json_with_text') 
+        output_dir = os.path.join(self.data_dir,'formatted','json') 
         os.makedirs(output_dir,exist_ok=True)
         table_dir = os.path.join(self.data_dir,'asset/table')
         for j in ['catchdata','stc']:
@@ -264,7 +271,7 @@ class DataMiner():
 
     def format_hjson(self):
         logging.info('Loading texttable into hjson files')
-        output_dir = os.path.join(self.data_dir,'data_hjson') 
+        output_dir = os.path.join(self.data_dir,'formatted','hjson') 
         os.makedirs(output_dir,exist_ok=True)
         table_dir = os.path.join(self.data_dir,'asset/table')
         for j in ['catchdata','stc']:
