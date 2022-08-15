@@ -68,7 +68,7 @@ class DataMiner():
         logging.info(f'Getting resource data list')
         bkey = base64.standard_b64decode(self.res_key)
         biv = base64.standard_b64decode(self.res_iv)        
-        if self.region=='cht':
+        if self.region=='at':
             fname = f"{self.minversion}_alpha2020_{self.abVersion}_AndroidResConfigData"
         else:
             fname = f"{self.minversion}_{self.abVersion}_AndroidResConfigData"
