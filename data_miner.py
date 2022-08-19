@@ -278,6 +278,10 @@ class DataMiner():
             json_dir = os.path.join(self.data_dir,j)
             data = get_stc_data(json_dir, table_dir,to_dict=False)
             for key, value in data.items():
+                for record in value:
+                    for k,v in dict(record).items():
+                        if v=='' or v=='0' or v==0:
+                            record.pop(k)
                 with open(os.path.join(output_dir,f'{key}.hjson'),'w',encoding='utf-8') as f:
                     hjson.dump(value,f)
 
