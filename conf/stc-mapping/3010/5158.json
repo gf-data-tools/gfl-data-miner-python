@@ -1,0 +1,11 @@
+{
+    "name": "fight_success_condition",
+    "fields": [
+        "id",
+        "name",
+        "type",
+        "desc",
+        "condition_coef",
+        "score_coef"
+    ]
+}
