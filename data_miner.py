@@ -114,7 +114,7 @@ class DataMiner():
     
     @property
     def version_str(self):
-        return f"[{self.region.upper()}] {self.clientVersion} | data {self.dataVersion[:7]} | dabao {self.daBaoTime[:14]}"
+        return f"[{self.region.upper()}] {self.clientVersion} | data {self.dataVersion[:7]} | dabao {self.daBaoTime[:-32]}"
         
     def update_raw_resource(self, force=False):
         if os.path.exists(self.raw_dir):
