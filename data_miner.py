@@ -158,7 +158,7 @@ class DataMiner():
             self.format_data()
             with open(os.path.join(self.data_dir,'version.json'),'w',encoding='utf-8') as f:
                 json.dump(self.version,f,indent=4,ensure_ascii=False)
-            print(f'::set-output name=commit-message-{self.region}::"{self.version_str}"')
+            print(f'::set-output name=commit-message-{self.region}::{self.version_str}')
             shutil.rmtree(self.raw_dir)
         else:
             logging.info('current data is up to date')
