@@ -237,7 +237,7 @@ class DataMiner():
     def format_data(self):
         logging.info('Formatting json and hjson outputs')
         json_output_dir = os.path.join(self.data_dir,'formatted','json') 
-        hjson_output_dir = os.path.join(self.data_dir,'formatted','json') 
+        hjson_output_dir = os.path.join(self.data_dir,'formatted','hjson') 
         os.makedirs(json_output_dir,exist_ok=True)
         os.makedirs(hjson_output_dir,exist_ok=True)
         table_dir = os.path.join(self.data_dir,'asset/table')
