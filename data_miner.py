@@ -155,8 +155,7 @@ class DataMiner():
             self.process_assets()
             self.process_catchdata()
             self.process_stc()
-            self.format_json()
-            self.format_hjson()
+            self.format_data()
             with open(os.path.join(self.data_dir,'version.json'),'w',encoding='utf-8') as f:
                 json.dump(self.version,f,indent=4,ensure_ascii=False)
             print(f'::set-output name=commit-message-{self.region}::"{self.version_str}"')
@@ -235,42 +234,24 @@ class DataMiner():
             with open(os.path.join(dst_dir, f'{name}.json'),'w',encoding='utf-8') as f:
                 json.dump(data,f,indent=4,ensure_ascii=False)
 
-    def format_csv(self):
-        output_dir = os.path.join(self.data_dir,'csv') 
-        os.makedirs(output_dir,exist_ok=True)
+    def format_data(self):
+        logging.info('Formatting json and hjson outputs')
+        json_output_dir = os.path.join(self.data_dir,'formatted','json') 
+        hjson_output_dir = os.path.join(self.data_dir,'formatted','json') 
+        os.makedirs(json_output_dir,exist_ok=True)
+        os.makedirs(hjson_output_dir,exist_ok=True)
         table_dir = os.path.join(self.data_dir,'asset/table')
         for j in ['catchdata','stc']:
             json_dir = os.path.join(self.data_dir,j)
             data = get_stc_data(json_dir, table_dir,to_dict=False)
             for key, value in data.items():
-                pd.DataFrame.from_records(value).to_csv(os.path.join(output_dir,f'{key}.csv'),index=False)
-
-    def format_json(self):
-        logging.info('Loading texttable into json files')
-        output_dir = os.path.join(self.data_dir,'formatted','json') 
-        os.makedirs(output_dir,exist_ok=True)
-        table_dir = os.path.join(self.data_dir,'asset/table')
-        for j in ['catchdata','stc']:
-            json_dir = os.path.join(self.data_dir,j)
-            data = get_stc_data(json_dir, table_dir,to_dict=False)
-            for key, value in data.items():
-                with open(os.path.join(output_dir,f'{key}.json'),'w',encoding='utf-8') as f:
+                with open(os.path.join(json_output_dir,f'{key}.json'),'w',encoding='utf-8') as f:
                     json.dump(value,f,ensure_ascii=False,indent=4)
-
-    def format_hjson(self):
-        logging.info('Loading texttable into hjson files')
-        output_dir = os.path.join(self.data_dir,'formatted','hjson') 
-        os.makedirs(output_dir,exist_ok=True)
-        table_dir = os.path.join(self.data_dir,'asset/table')
-        for j in ['catchdata','stc']:
-            json_dir = os.path.join(self.data_dir,j)
-            data = get_stc_data(json_dir, table_dir,to_dict=False)
-            for key, value in data.items():
                 for record in value:
                     for k,v in dict(record).items():
                         if v=='' or v=='0' or v==0:
                             record.pop(k)
-                with open(os.path.join(output_dir,f'{key}.hjson'),'w',encoding='utf-8') as f:
+                with open(os.path.join(hjson_output_dir,f'{key}.hjson'),'w',encoding='utf-8') as f:
                     hjson.dump(value,f)
 
 
