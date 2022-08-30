@@ -159,19 +159,7 @@ class DataMiner():
             self.format_hjson()
             with open(os.path.join(self.data_dir,'version.json'),'w',encoding='utf-8') as f:
                 json.dump(self.version,f,indent=4,ensure_ascii=False)
-
-            if conf['git_update']:
-                git = Git(os.path.join(DATA_ROOT,self.region))
-                git.execute('git add .', shell=True)
-                if git.diff_index('HEAD'):
-                    logging.info('Committing')
-                    git.execute(f'git commit -m "{self.version_str}"', shell=True)
-                    git_parent = Git(DATA_ROOT)
-                    git_parent.execute(f'git add {self.region}', shell=True)
-                    git_parent.execute(f'git commit -m "{self.version_str}"', shell=True)
-                    print('::set-output name=has-new-commits::true')
-                else:
-                    logging.info('Nothing new, skip committing')
+            print(f'::set-output name=commit-message-{self.region}::"{self.version_str}"')
             shutil.rmtree(self.raw_dir)
         else:
             logging.info('current data is up to date')
