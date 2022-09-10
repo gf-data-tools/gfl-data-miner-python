@@ -62,6 +62,8 @@ class DataMiner():
             self.minversion = round(eval(self.clientVersion)/100) * 10
         else:
             self.minversion = eval(self.clientVersion)
+        if self.region=='tw':
+            self.minversion = 3010
         self.abVersion = version["ab_version"]
 
     def get_res_data(self):
@@ -72,7 +74,7 @@ class DataMiner():
             fname = f"{self.minversion}_alpha2020_{self.abVersion}_AndroidResConfigData"
         else:
             fname = f"{self.minversion}_{self.abVersion}_AndroidResConfigData"
-
+        logging.debug(f'resdata name {fname}')
         en = get_des_encrypted(fname,bkey,biv[:8])
         res_config = base64.standard_b64encode(en).decode('utf-8')
         res_config = re.sub(r"[^a-zA-Z0-9]","",res_config)+'.txt'
@@ -254,7 +256,7 @@ class DataMiner():
                 with open(os.path.join(hjson_output_dir,f'{key}.hjson'),'w',encoding='utf-8') as f:
                     hjson.dump(value,f)
 
-
+#  http://sn-list.txwy.tw/dy0zV8P8jkNjG17lb0Pxira5K8IK2YjKpVvKA94WhUE.txt?r=1662796700
 # %%
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
