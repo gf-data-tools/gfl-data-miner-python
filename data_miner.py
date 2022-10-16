@@ -163,7 +163,7 @@ class DataMiner():
             with open(os.path.join(self.data_dir,'version.json'),'w',encoding='utf-8') as f:
                 json.dump(self.version,f,indent=4,ensure_ascii=False)
             # print(f'::set-output name=commit-message-{self.region}::{self.version_str}')
-            print(f'"commit-message-{self.region}={self.version_str}" >> $GITHUB_ENV')
+            os.system(f'echo "commit-message-{self.region}={self.version_str}" >> $GITHUB_ENV')
             shutil.rmtree(self.raw_dir)
         else:
             logging.info('current data is up to date')
