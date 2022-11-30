@@ -32,6 +32,12 @@ with open(CONFIG_JSON5,'r',encoding='utf-8') as f:
 RAW_ROOT = r'raw'
 DATA_ROOT = conf['git']['local']
 
+class GithubEnv:
+    def __init__(self):
+        self.file = Path(os.environ.get('GITHUB_ENV','env.txt'))
+    def __setitem__(self, name, value):
+        with self.file.open('a') as f:
+            f.write(f'{name}={value}\n')
 # %%
 class DataMiner():
     def __init__(self,region='ch'):
@@ -48,6 +54,7 @@ class DataMiner():
         self.res_iv = conf['res_iv']
         self.lua_key = conf['lua_key']
         self.dat_key = conf['dat_key']
+        self.github_env = GithubEnv()
 
     def get_current_version(self):
         logging.info(f'Requesting version')
@@ -162,8 +169,7 @@ class DataMiner():
             self.format_data()
             with open(os.path.join(self.data_dir,'version.json'),'w',encoding='utf-8') as f:
                 json.dump(self.version,f,indent=4,ensure_ascii=False)
-            # print(f'::set-output name=commit-message-{self.region}::{self.version_str}')
-            os.system(f'echo "commit-message-{self.region}={self.version_str}" >> $GITHUB_ENV')
+            self.github_env[f'commit-message-{self.region}'] = f'{self.version_str}'
             shutil.rmtree(self.raw_dir)
         else:
             logging.info('current data is up to date')
