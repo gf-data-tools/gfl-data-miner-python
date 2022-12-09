@@ -1,6 +1,7 @@
 raw
 data
 $GITHUB_ENV
+env.txt
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
