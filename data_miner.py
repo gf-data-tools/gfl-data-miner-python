@@ -273,6 +273,7 @@ if __name__=='__main__':
     parser.add_argument('--force', '-f',action='store_true')
     parser.add_argument('--loglevel',default='INFO',choices=['DEBUG','INFO','WARNING','ERROR','CRITICAL'])
     args=parser.parse_args()
+    error = False
     for region in args.region:
         print(f"::group::{region.upper()} Server")
         try:
@@ -282,5 +283,8 @@ if __name__=='__main__':
         except Exception as e:
             logging.error(traceback.format_exc())
             logging.error(f"Extraction failed due to {e}")
+            error = True
         print("::endgroup::")
+    if error:
+        raise RuntimeError('Error during execution')
 # %%
