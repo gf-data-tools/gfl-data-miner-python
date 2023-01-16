@@ -247,9 +247,9 @@ class DataMiner:
             assert len(data.keys()) == 1
             for key in data.keys():
                 logging.debug(f"Formatting {key}.json")
-                (Path(dst_dir) / f"{key}.json").write_text(self.json_formatter.serialize(data[key]))
-                # with open(os.path.join(dst_dir,f'{key}.json'),'w',encoding='utf-8') as f:
-                #     json.dump(data[key],f,indent=4,ensure_ascii=False)
+                # (Path(dst_dir) / f"{key}.json").write_text(self.json_formatter.serialize(data[key]))
+                with open(os.path.join(dst_dir, f"{key}.json"), "w", encoding="utf-8") as f:
+                    json.dump(data[key], f, indent=4, ensure_ascii=False)
 
     def process_stc(self):
         mapping_dir = os.path.join("conf/stc-mapping", str(self.minversion))
@@ -266,9 +266,9 @@ class DataMiner:
             stc = os.path.join(stc_dir, f"{id}.stc")
             mapping = os.path.join(mapping_dir, f"{id}.json")
             name, data = format_stc(stc, mapping)
-            (Path(dst_dir) / f"{name}.json").write_text(self.json_formatter.serialize(data))
-            # with open(os.path.join(dst_dir, f'{name}.json'),'w',encoding='utf-8') as f:
-            #     json.dump(data,f,indent=4,ensure_ascii=False)
+            # (Path(dst_dir) / f"{name}.json").write_text(self.json_formatter.serialize(data))
+            with open(os.path.join(dst_dir, f"{name}.json"), "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=4, ensure_ascii=False)
 
     def format_data(self):
         logging.info("Formatting json and hjson outputs")
