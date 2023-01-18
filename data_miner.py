@@ -300,6 +300,7 @@ if __name__ == "__main__":
     parser.add_argument("--force", "-f", action="store_true")
     parser.add_argument("--loglevel", default="INFO", choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"])
     args = parser.parse_args()
+    error = False
     for region in args.region:
         print(f"::group::{region.upper()} Server")
         try:
