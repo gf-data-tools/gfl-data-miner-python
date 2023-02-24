@@ -1,5 +1,6 @@
 raw
 data
+test*
 $GITHUB_ENV
 env.txt
 # Byte-compiled / optimized / DLL files

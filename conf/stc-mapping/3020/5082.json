@@ -1,0 +1,10 @@
+{
+    "name": "commander_emoji",
+    "fields": [
+        "id",
+        "content",
+        "is_show",
+        "required_level",
+        "required_comfort"
+    ]
+}

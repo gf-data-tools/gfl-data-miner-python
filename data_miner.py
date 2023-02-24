@@ -87,6 +87,8 @@ class DataMiner:
             self.minversion = eval(self.clientVersion)
         if self.clientVersion == "29999":
             self.minversion = 3010
+        if self.clientVersion == "30103":
+            self.minversion = 3020
         self.abVersion = version["ab_version"]
 
     def get_res_data(self):
@@ -105,7 +107,10 @@ class DataMiner:
         resdata_fp = os.path.join(self.raw_dir, "AndroidResConfigData")
         download(resdata_url, resdata_fp)
         unpack_all_assets(resdata_fp, self.raw_dir)
-        with open(os.path.join(self.raw_dir, "assets/resources/resdata.asset"), encoding="utf-8") as f:
+        with open(
+            os.path.join(self.raw_dir, "assets/resources/resdata.asset"),
+            encoding="utf-8",
+        ) as f:
             self.resdata = pyjson5.load(f)
         self.daBaoTime = self.resdata["daBaoTime"]
         self.version["dabao_time"] = self.resdata["daBaoTime"]
@@ -113,7 +118,8 @@ class DataMiner:
     def process_resdata(self):
         logging.info("Processing resdata")
         shutil.copy(
-            os.path.join(self.raw_dir, "assets/resources/resdata.asset"), os.path.join(self.data_dir, "resdata.json")
+            os.path.join(self.raw_dir, "assets/resources/resdata.asset"),
+            os.path.join(self.data_dir, "resdata.json"),
         )
         for k in ["passivityAssetBundles", "BaseAssetBundles", "AddAssetBundles"]:
             self.resdata[k].sort(key=lambda x: x["assetBundleName"])
@@ -122,12 +128,19 @@ class DataMiner:
                 for a in r["assetAllRes"]:
                     a.pop("hashCode", None)
                     a.pop("hasCodes", None)
-        with open(os.path.join(self.data_dir, "resdata_no_hash.json"), "w", encoding="utf-8") as f:
+        with open(
+            os.path.join(self.data_dir, "resdata_no_hash.json"), "w", encoding="utf-8"
+        ) as f:
             json.dump(self.resdata, f, indent=4, ensure_ascii=False)
 
     def get_asset_bundles(self):
         res_url = self.resdata["resUrl"]
-        targets = ["asset_textavg", "asset_texttable", "asset_textes", "asset_textlangue"]
+        targets = [
+            "asset_textavg",
+            "asset_texttable",
+            "asset_textes",
+            "asset_textlangue",
+        ]
         for ab_info in self.resdata["BaseAssetBundles"]:
             if ab_info["assetBundleName"] in targets:
                 ab_url = f'{res_url}{ab_info["resname"]}.ab'
@@ -136,21 +149,21 @@ class DataMiner:
 
     def get_stc(self):
         hash = get_md5_hash(self.dataVersion)
-        stc_url = self.host["cdn_host"] + "/data/stc_" + self.dataVersion + hash + ".zip"
+        stc_url = (
+            self.host["cdn_host"] + "/data/stc_" + self.dataVersion + hash + ".zip"
+        )
         stc_fp = os.path.join(self.raw_dir, "stc.zip")
         download(stc_url, stc_fp)
         ZipFile(stc_fp).extractall(os.path.join(self.raw_dir, "stc"))
 
     @property
     def version_str(self):
-        return (
-            f"[{self.region.upper()}] {self.clientVersion} | data {self.dataVersion[:7]} | dabao {self.daBaoTime[:-32]}"
-        )
+        return f"[{self.region.upper()}] {self.clientVersion} | data {self.dataVersion[:7]} | dabao {self.daBaoTime[:-32]}"
 
     def update_raw_resource(self, force=False):
-        if os.path.exists(self.raw_dir):
-            shutil.rmtree(self.raw_dir)
-        os.makedirs(self.raw_dir)
+        # if os.path.exists(self.raw_dir):
+        #     shutil.rmtree(self.raw_dir)
+        os.makedirs(self.raw_dir, exist_ok=True)
         self.get_current_version()
         self.get_res_data()
         logging.info(self.version_str)
@@ -177,17 +190,19 @@ class DataMiner:
             available = True
 
         if available:
-            os.makedirs(self.data_dir, exist_ok=True)
-            self.remove_old_data()
-            logging.info("New data available, start downloading")
-            self.get_asset_bundles()
-            self.get_stc()
-            self.process_resdata()
-            self.process_assets()
-            self.process_catchdata()
+            # os.makedirs(self.data_dir, exist_ok=True)
+            # self.remove_old_data()
+            # logging.info("New data available, start downloading")
+            # self.get_asset_bundles()
+            # self.get_stc()
+            # self.process_resdata()
+            # self.process_assets()
+            # self.process_catchdata()
             self.process_stc()
             self.format_data()
-            with open(os.path.join(self.data_dir, "version.json"), "w", encoding="utf-8") as f:
+            with open(
+                os.path.join(self.data_dir, "version.json"), "w", encoding="utf-8"
+            ) as f:
                 json.dump(self.version, f, indent=4, ensure_ascii=False)
             self.github_env[f"commit-message-{self.region}"] = f"{self.version_str}"
             shutil.rmtree(self.raw_dir)
@@ -202,13 +217,22 @@ class DataMiner:
 
     def process_assets(self):
         logging.info("Processing assets")
-        for asset in ["asset_textavg", "asset_texttable", "asset_textes", "asset_textlangue"]:
+        for asset in [
+            "asset_textavg",
+            "asset_texttable",
+            "asset_textes",
+            "asset_textlangue",
+        ]:
             unpack_all_assets(os.path.join(self.raw_dir, asset + ".ab"), self.raw_dir)
         asset_output = os.path.join(self.data_dir, "asset")
         os.makedirs(asset_output, exist_ok=True)
         asset_dir = os.path.join(self.raw_dir, "assets/resources/dabao")
         for subdir in os.listdir(asset_dir):
-            shutil.copytree(os.path.join(asset_dir, subdir), os.path.join(asset_output, subdir), dirs_exist_ok=True)
+            shutil.copytree(
+                os.path.join(asset_dir, subdir),
+                os.path.join(asset_output, subdir),
+                dirs_exist_ok=True,
+            )
         shutil.copytree(
             os.path.join(self.raw_dir, "assets/resources/textdata/language"),
             os.path.join(asset_output, "language"),
@@ -248,7 +272,9 @@ class DataMiner:
             for key in data.keys():
                 logging.debug(f"Formatting {key}.json")
                 # (Path(dst_dir) / f"{key}.json").write_text(self.json_formatter.serialize(data[key]))
-                with open(os.path.join(dst_dir, f"{key}.json"), "w", encoding="utf-8") as f:
+                with open(
+                    os.path.join(dst_dir, f"{key}.json"), "w", encoding="utf-8"
+                ) as f:
                     json.dump(data[key], f, indent=4, ensure_ascii=False)
 
     def process_stc(self):
@@ -265,9 +291,11 @@ class DataMiner:
                 continue
             stc = os.path.join(stc_dir, f"{id}.stc")
             mapping = os.path.join(mapping_dir, f"{id}.json")
-            name, data = format_stc(stc, mapping)
+            name, data = format_stc(stc, mapping, self.minversion == 3020)
             # (Path(dst_dir) / f"{name}.json").write_text(self.json_formatter.serialize(data))
-            with open(os.path.join(dst_dir, f"{name}.json"), "w", encoding="utf-8") as f:
+            with open(
+                os.path.join(dst_dir, f"{name}.json"), "w", encoding="utf-8"
+            ) as f:
                 json.dump(data, f, indent=4, ensure_ascii=False)
 
     def format_data(self):
@@ -281,14 +309,20 @@ class DataMiner:
             json_dir = os.path.join(self.data_dir, j)
             data = get_stc_data(json_dir, table_dir, to_dict=False)
             for key, value in data.items():
-                (Path(json_output_dir) / f"{key}.json").write_text(self.json_formatter.serialize(value))
+                (Path(json_output_dir) / f"{key}.json").write_text(
+                    self.json_formatter.serialize(value)
+                )
                 # with open(os.path.join(json_output_dir,f'{key}.json'),'w',encoding='utf-8') as f:
                 #     json.dump(value,f,ensure_ascii=False,indent=4)
                 for record in value:
                     for k, v in dict(record).items():
                         if v == "" or v == "0" or v == 0:
                             record.pop(k)
-                with open(os.path.join(hjson_output_dir, f"{key}.hjson"), "w", encoding="utf-8") as f:
+                with open(
+                    os.path.join(hjson_output_dir, f"{key}.hjson"),
+                    "w",
+                    encoding="utf-8",
+                ) as f:
                     hjson.dump(value, f)
 
 
@@ -296,9 +330,15 @@ class DataMiner:
 # %%
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("region", nargs="+", choices=["ch", "tw", "kr", "us", "jp", "at"])
+    parser.add_argument(
+        "region", nargs="+", choices=["ch", "tw", "kr", "us", "jp", "at"]
+    )
     parser.add_argument("--force", "-f", action="store_true")
-    parser.add_argument("--loglevel", default="INFO", choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"])
+    parser.add_argument(
+        "--loglevel",
+        default="INFO",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+    )
     args = parser.parse_args()
     error = False
     for region in args.region:

@@ -57,17 +57,22 @@ class StcReader:
         }[id]()
 
 
-def format_stc(stc: str, mapping: str):
+def format_stc(stc: str, mapping: str, long=False):
     with open(mapping, "r") as f:
         stc_conf = json.load(f)
 
     reader = StcReader(stc)
     code = reader.read_ushort()
-    reader.skip_bytes(2)
+    if not long:
+        reader.skip_bytes(2)
+    else:
+        reader.skip_bytes(4)
     logging.debug(f"reading {os.path.split(stc)[-1]}, code {code}")
     data = list()
-
-    row = reader.read_ushort()
+    if not long:
+        row = reader.read_ushort()
+    else:
+        row = reader.read_int()
     if row == 0:
         return stc_conf["name"], data
     col = reader.read_byte()
