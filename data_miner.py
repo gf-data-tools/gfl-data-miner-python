@@ -161,8 +161,8 @@ class DataMiner:
         return f"[{self.region.upper()}] {self.clientVersion} | data {self.dataVersion[:7]} | dabao {self.daBaoTime[:-32]}"
 
     def update_raw_resource(self, force=False):
-        # if os.path.exists(self.raw_dir):
-        #     shutil.rmtree(self.raw_dir)
+        if os.path.exists(self.raw_dir):
+            shutil.rmtree(self.raw_dir)
         os.makedirs(self.raw_dir, exist_ok=True)
         self.get_current_version()
         self.get_res_data()
@@ -190,14 +190,14 @@ class DataMiner:
             available = True
 
         if available:
-            # os.makedirs(self.data_dir, exist_ok=True)
-            # self.remove_old_data()
-            # logging.info("New data available, start downloading")
-            # self.get_asset_bundles()
-            # self.get_stc()
-            # self.process_resdata()
-            # self.process_assets()
-            # self.process_catchdata()
+            os.makedirs(self.data_dir, exist_ok=True)
+            self.remove_old_data()
+            logging.info("New data available, start downloading")
+            self.get_asset_bundles()
+            self.get_stc()
+            self.process_resdata()
+            self.process_assets()
+            self.process_catchdata()
             self.process_stc()
             self.format_data()
             with open(
