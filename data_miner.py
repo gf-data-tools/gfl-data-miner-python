@@ -229,6 +229,8 @@ class DataMiner:
                 unpack_all_assets(
                     os.path.join(self.raw_dir, asset + ".ab"), self.raw_dir
                 )
+        for f in Path(self.raw_dir).glob("**/*.asset"):
+            os.remove(f)
         asset_output = os.path.join(self.data_dir, "asset")
         os.makedirs(asset_output, exist_ok=True)
         asset_dir = os.path.join(self.raw_dir, "assets/resources/dabao")
