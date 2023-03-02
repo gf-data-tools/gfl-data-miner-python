@@ -140,6 +140,7 @@ class DataMiner:
             "asset_texttable",
             "asset_textes",
             "asset_textlangue",
+            "asset_assetother",
         ]
         for ab_info in self.resdata["BaseAssetBundles"]:
             if ab_info["assetBundleName"] in targets:
@@ -222,8 +223,12 @@ class DataMiner:
             "asset_texttable",
             "asset_textes",
             "asset_textlangue",
+            "asset_assetother",
         ]:
-            unpack_all_assets(os.path.join(self.raw_dir, asset + ".ab"), self.raw_dir)
+            if os.path.exists(os.path.join(self.raw_dir, asset + ".ab")):
+                unpack_all_assets(
+                    os.path.join(self.raw_dir, asset + ".ab"), self.raw_dir
+                )
         asset_output = os.path.join(self.data_dir, "asset")
         os.makedirs(asset_output, exist_ok=True)
         asset_dir = os.path.join(self.raw_dir, "assets/resources/dabao")
