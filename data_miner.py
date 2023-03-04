@@ -117,10 +117,10 @@ class DataMiner:
 
     def process_resdata(self):
         logging.info("Processing resdata")
-        shutil.copy(
-            os.path.join(self.raw_dir, "assets/resources/resdata.asset"),
-            os.path.join(self.data_dir, "resdata.json"),
-        )
+        # shutil.copy(
+        #     os.path.join(self.raw_dir, "assets/resources/resdata.asset"),
+        #     os.path.join(self.data_dir, "resdata.json"),
+        # )
         for k in ["passivityAssetBundles", "BaseAssetBundles", "AddAssetBundles"]:
             self.resdata[k].sort(key=lambda x: x["assetBundleName"])
             for r in self.resdata[k]:
