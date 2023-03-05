@@ -179,7 +179,7 @@ class DataMiner:
                     version = pyjson5.load(f)
                 if version["data_version"] != self.dataVersion:
                     available = True
-            saved_resdata_fp = os.path.join(self.data_dir, "resdata.json")
+            saved_resdata_fp = os.path.join(self.data_dir, "resdata_no_hash.json")
             if not os.path.exists(saved_resdata_fp):
                 available = True
             else:
