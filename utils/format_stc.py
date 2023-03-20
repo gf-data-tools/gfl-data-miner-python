@@ -102,7 +102,7 @@ def format_stc(stc: str, mapping: str, long=False):
     reader.skip_bytes(4)
     offset = reader.read_int()
     reader.seek(offset)
-    if code == 5146:
+    if code == 5146 and long:
         reader.seek(95)
     for _ in range(row):
         record = OrderedDict()
@@ -116,9 +116,9 @@ def format_stc(stc: str, mapping: str, long=False):
 # %%
 if __name__ == "__main__":
     logging.basicConfig(level="DEBUG")
-    stc = r"D:\Workspace\gfline\GF_Data_Tools\data-miner\raw\at\stc\5146.stc"
+    stc = r"D:\Workspace\gfline\GF_Data_Tools\data-miner\raw\at\stc\5000.stc"
     mapping = (
-        r"D:\Workspace\gfline\GF_Data_Tools\data-miner\conf\stc-mapping\3020\5146.json"
+        r"D:\Workspace\gfline\GF_Data_Tools\data-miner\conf\stc-mapping\3020\5000.json"
     )
     table = format_stc(stc, mapping, long=True)
     print(table)

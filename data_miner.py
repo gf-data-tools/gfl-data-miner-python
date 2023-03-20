@@ -87,7 +87,7 @@ class DataMiner:
             self.minversion = eval(self.clientVersion)
         if self.clientVersion == "29999":
             self.minversion = 3010
-        if self.clientVersion == "30103":
+        if self.clientVersion == "3010":
             self.minversion = 3020
         self.abVersion = version["ab_version"]
 
