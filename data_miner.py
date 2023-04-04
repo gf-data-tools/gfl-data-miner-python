@@ -21,6 +21,7 @@ from compact_json.formatter import EolStyle, Formatter
 from gf_utils.stc_data import get_stc_data
 from git import Git
 from git.repo import Repo
+
 from utils.asset_extractor import unpack_all_assets
 from utils.crypto import get_des_encrypted, get_md5_hash, xor_decrypt
 from utils.download import download
@@ -33,6 +34,7 @@ with open(CONFIG_JSON5, "r", encoding="utf-8") as f:
     conf = pyjson5.load(f)
 RAW_ROOT = r"raw"
 DATA_ROOT = conf["git"]["local"]
+PERSONAL_TOKEN = os.environ.get("PERSONAL_TOKEN", None)
 
 
 class GithubEnv:
@@ -71,6 +73,26 @@ class DataMiner:
             east_asian_string_widths=True,
             multiline_compact_dict=True,
         )
+
+    def read_repo_file(self, filepath):
+        req = request.Request(
+            f"https://raw.githubusercontent.com/gf-data-tools/"
+            f"gf-data-{self.region}/main/{filepath}",
+            headers={
+                "Authorization": f"Bearer {PERSONAL_TOKEN}" if PERSONAL_TOKEN else ""
+            },
+        )
+        return request.urlopen(req).read()
+
+    @property
+    def git_url(self):
+        if not PERSONAL_TOKEN:
+            return f"https://github.com/gf-data-tools/gf-data-{self.region}.git"
+        else:
+            return (
+                f"https://oauth2:{PERSONAL_TOKEN}@github.com/"
+                f"gf-data-tools/gf-data-{self.region}.git"
+            )
 
     def get_current_version(self):
         logging.info(f"Requesting version")
@@ -171,50 +193,38 @@ class DataMiner:
 
         available = False
         if not force:
-            saved_version_fp = os.path.join(self.data_dir, "version.json")
-            if not os.path.exists(saved_version_fp):
+            version = pyjson5.load(self.read_repo_file("version.json"))
+            if version["data_version"] != self.dataVersion:
                 available = True
-            else:
-                with open(saved_version_fp, encoding="utf-8") as f:
-                    version = pyjson5.load(f)
-                if version["data_version"] != self.dataVersion:
-                    available = True
-            saved_resdata_fp = os.path.join(self.data_dir, "resdata_no_hash.json")
-            if not os.path.exists(saved_resdata_fp):
+            resdata = pyjson5.load(self.read_repo_file("resdata_no_hash.json"))
+            if resdata["daBaoTime"] != self.daBaoTime:
                 available = True
-            else:
-                with open(saved_resdata_fp, encoding="utf-8") as f:
-                    resdata = pyjson5.load(f)
-                if resdata["daBaoTime"] != self.daBaoTime:
-                    available = True
         else:
             available = True
+        print(available)
 
-        if available:
-            os.makedirs(self.data_dir, exist_ok=True)
-            self.remove_old_data()
-            logging.info("New data available, start downloading")
-            self.get_asset_bundles()
-            self.get_stc()
-            self.process_resdata()
-            self.process_assets()
-            self.process_catchdata()
-            self.process_stc()
-            self.format_data()
-            with open(
-                os.path.join(self.data_dir, "version.json"), "w", encoding="utf-8"
-            ) as f:
-                json.dump(self.version, f, indent=4, ensure_ascii=False)
-            self.github_env[f"commit-message-{self.region}"] = f"{self.version_str}"
-            shutil.rmtree(self.raw_dir)
-        else:
+        if not available:
             logging.info("current data is up to date")
-        return available
+            return False
 
-    def remove_old_data(self):
-        for content in Path(self.data_dir).iterdir():
-            if content.is_dir():
-                shutil.rmtree(content)
+        logging.info("New data available")
+        logging.info("Initializing Repo")
+        # self.repo = Repo.clone_from(self.git_url, to_path=self.data_dir, depth=1)
+        repo = Repo(self.data_dir)
+        self.get_asset_bundles()
+        self.get_stc()
+        self.process_resdata()
+        self.process_assets()
+        self.process_catchdata()
+        self.process_stc()
+        self.format_data()
+        with open(
+            os.path.join(self.data_dir, "version.json"), "w", encoding="utf-8"
+        ) as f:
+            json.dump(self.version, f, indent=4, ensure_ascii=False)
+        repo.git.commit(a=True, m=self.version_str)
+        repo.git.push()
+        return True
 
     def process_assets(self):
         logging.info("Processing assets")

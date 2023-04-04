@@ -33,6 +33,6 @@
     git_update: true,
     git:{
         remote: 'https://github.com/gf-data-tools/gfl-data.git',
-        local: '../data'
+        local: './data'
     } 
 }
