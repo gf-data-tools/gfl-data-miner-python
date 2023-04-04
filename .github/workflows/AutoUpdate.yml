@@ -30,6 +30,6 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
       - name: Data Miner
+        env:
+          PERSONAL_TOKEN: ${{ secrets.TEST }}
         run: python data_miner.py ${{ inputs.cmdargs || 'tw kr jp us ch' }} 
-      - name: Git Push
-        run: git push
