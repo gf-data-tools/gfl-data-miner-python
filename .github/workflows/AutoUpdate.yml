@@ -8,6 +8,7 @@ on:
         required: false
         default: 'at tw kr jp us ch' 
         type: string
+  push:
   schedule:
     - cron: '30 1,2-14/3 * * *'
     - cron: '0 4-13/3 * * 4'
@@ -18,12 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: git
-        run: |
-          git --version
-          git config user.name "AutoUpdate"
-          git config user.email "<>"
-          git config core.autocrlf true
       - name: Setup Python
         uses: actions/setup-python@v2.2.2
         with:
@@ -33,4 +28,5 @@ jobs:
       - name: Data Miner
         env:
           PERSONAL_TOKEN: ${{ secrets.TEST }}
+          AUTHOR: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
         run: python data_miner.py ${{ inputs.cmdargs || 'at tw kr jp us ch' }} 

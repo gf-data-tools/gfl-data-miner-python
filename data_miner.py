@@ -35,6 +35,7 @@ with open(CONFIG_JSON5, "r", encoding="utf-8") as f:
 RAW_ROOT = r"raw"
 DATA_ROOT = conf["git"]["local"]
 PERSONAL_TOKEN = os.environ.get("PERSONAL_TOKEN", None)
+AUTHOR = os.environ.get("AUTHOR", "Author <>")
 
 
 class GithubEnv:
@@ -181,6 +182,8 @@ class DataMiner:
     def update_raw_resource(self, force=False):
         if os.path.exists(self.raw_dir):
             shutil.rmtree(self.raw_dir)
+        if os.path.exists(self.data_dir):
+            shutil.rmtree(self.data_dir)
         os.makedirs(self.raw_dir, exist_ok=True)
         self.get_current_version()
         self.get_res_data()
@@ -218,16 +221,16 @@ class DataMiner:
             json.dump(self.version, f, indent=4, ensure_ascii=False)
 
         repo.git.config("user.email", "<>")
-        repo.git.config("user.name", "AutoUpdate")
+        repo.git.config("user.name", "github-actions[bot]")
         repo.git.config("core.autocrlf", "true")
         repo.git.add(all=True)
-        repo.git.commit(m=self.version_str)
+        repo.git.commit(m=self.version_str, author=AUTHOR)
         repo.git.push()
         return True
 
     def remove_old_data(self):
         for content in Path(self.data_dir).iterdir():
-            if content.is_dir():
+            if content.is_dir() and content.name != ".git":
                 shutil.rmtree(content)
 
     def process_assets(self):
