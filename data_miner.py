@@ -193,10 +193,10 @@ class DataMiner:
 
         available = False
         if not force:
-            version = pyjson5.load(self.read_repo_file("version.json"))
+            version = pyjson5.loads(self.read_repo_file("version.json"))
             if version["data_version"] != self.dataVersion:
                 available = True
-            resdata = pyjson5.load(self.read_repo_file("resdata_no_hash.json"))
+            resdata = pyjson5.loads(self.read_repo_file("resdata_no_hash.json"))
             if resdata["daBaoTime"] != self.daBaoTime:
                 available = True
         else:
