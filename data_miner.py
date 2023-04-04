@@ -52,12 +52,7 @@ class DataMiner:
         self.region = region
         self.raw_dir = os.path.join(RAW_ROOT, region)
         self.data_dir = os.path.join(DATA_ROOT, region)
-        hosts = os.path.join(self.data_dir, "hosts.json5")
-        if os.path.isfile(hosts):
-            with open(hosts, "r") as f:
-                self.host = pyjson5.load(f)
-        else:
-            self.host = conf["hosts"][region]
+        self.host = pyjson5.loads(self.read_repo_file("hosts.json5"))
         self.res_key = conf["res_key"]
         self.res_iv = conf["res_iv"]
         self.lua_key = conf["lua_key"]
