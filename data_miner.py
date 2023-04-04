@@ -82,7 +82,7 @@ class DataMiner:
                 "Authorization": f"Bearer {PERSONAL_TOKEN}" if PERSONAL_TOKEN else ""
             },
         )
-        return request.urlopen(req).read()
+        return request.urlopen(req).read().decode("utf-8")
 
     @property
     def git_url(self):
