@@ -203,8 +203,7 @@ class DataMiner:
 
         logging.info("New data available")
         logging.info("Initializing Repo")
-        # self.repo = Repo.clone_from(self.git_url, to_path=self.data_dir, depth=1)
-        repo = Repo(self.data_dir)
+        repo = Repo.clone_from(self.git_url, to_path=self.data_dir, depth=1)
         self.get_asset_bundles()
         self.get_stc()
         self.process_resdata()
