@@ -204,6 +204,7 @@ class DataMiner:
         logging.info("New data available")
         logging.info("Initializing Repo")
         repo = Repo.clone_from(self.git_url, to_path=self.data_dir, depth=1)
+        self.remove_old_data()
         self.get_asset_bundles()
         self.get_stc()
         self.process_resdata()
@@ -215,9 +216,17 @@ class DataMiner:
             os.path.join(self.data_dir, "version.json"), "w", encoding="utf-8"
         ) as f:
             json.dump(self.version, f, indent=4, ensure_ascii=False)
+
+        repo.git.config("user.email", "<>")
+        repo.git.config("user.name", "AutoUpdate")
         repo.git.commit(a=True, m=self.version_str)
         repo.git.push()
         return True
+
+    def remove_old_data(self):
+        for content in Path(self.data_dir).iterdir():
+            if content.is_dir():
+                shutil.rmtree(content)
 
     def process_assets(self):
         logging.info("Processing assets")
