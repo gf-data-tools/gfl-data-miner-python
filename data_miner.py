@@ -219,7 +219,9 @@ class DataMiner:
 
         repo.git.config("user.email", "<>")
         repo.git.config("user.name", "AutoUpdate")
-        repo.git.commit(a=True, m=self.version_str)
+        repo.git.config("core.autocrlf", "true")
+        repo.git.add(all=True)
+        repo.git.commit(m=self.version_str)
         repo.git.push()
         return True
 
