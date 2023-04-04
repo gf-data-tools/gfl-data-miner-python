@@ -201,7 +201,6 @@ class DataMiner:
                 available = True
         else:
             available = True
-        print(available)
 
         if not available:
             logging.info("current data is up to date")
