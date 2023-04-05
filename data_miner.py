@@ -220,12 +220,12 @@ class DataMiner:
         ) as f:
             json.dump(self.version, f, indent=4, ensure_ascii=False)
 
-        repo.git.config("user.email", "<>")
-        repo.git.config("user.name", "github-actions[bot]")
-        repo.git.config("core.autocrlf", "true")
         repo.git.add(all=True)
-        repo.git.commit(m=self.version_str, author=AUTHOR)
-        repo.git.push(self.git_url)
+        with repo.config_writer() as cw:
+            cw.set_value("user", "name", "github-actions[bot]")
+            cw.set_value("user", "email", "<>")
+        repo.git.commit(m="TEST", author="ZeroRin <ZeroRin@users.noreply.github.com>")
+        repo.remote().push()
         return True
 
     def remove_old_data(self):
