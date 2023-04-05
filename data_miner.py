@@ -225,7 +225,7 @@ class DataMiner:
         repo.git.config("core.autocrlf", "true")
         repo.git.add(all=True)
         repo.git.commit(m=self.version_str, author=AUTHOR)
-        repo.git.push()
+        repo.git.push(self.git_url)
         return True
 
     def remove_old_data(self):
