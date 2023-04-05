@@ -225,6 +225,7 @@ class DataMiner:
             cw.set_value("user", "name", "github-actions[bot]")
             cw.set_value("user", "email", "<>")
         repo.git.commit(m="TEST", author="ZeroRin <ZeroRin@users.noreply.github.com>")
+        repo.remote().set_url(self.git_url)
         repo.remote().push()
         return True
 
