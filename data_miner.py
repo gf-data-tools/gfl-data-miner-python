@@ -33,9 +33,11 @@ CONFIG_JSON5 = r"conf/config.json5"
 with open(CONFIG_JSON5, "r", encoding="utf-8") as f:
     conf = pyjson5.load(f)
 RAW_ROOT = r"raw"
+
 DATA_ROOT = conf["git"]["local"]
 PERSONAL_TOKEN = os.environ.get("PERSONAL_TOKEN", None)
 AUTHOR = os.environ.get("AUTHOR", "Author <>")
+DINGTALK_TOKEN = os.environ.get("DINGTALK_TOKEN", "")
 
 
 class GithubEnv:
@@ -229,6 +231,7 @@ class DataMiner:
         )
         repo.remote().set_url(self.git_url)
         repo.remote().push()
+        self.dingtalk_notice(self.version_str)
         return True
 
     def remove_old_data(self):
@@ -351,6 +354,17 @@ class DataMiner:
                     encoding="utf-8",
                 ) as f:
                     hjson.dump(value, f)
+
+    def dingtalk_notice(self, message: str):
+        url = f"https://oapi.dingtalk.com/robot/send?access_token={DINGTALK_TOKEN}"
+        header = {"Content-Type": "application/json"}
+        data = json.dumps(
+            dict(msgtype="text", text={"content": f"[gf-data-tools] {message}"})
+        )
+        req = request.Request(url=url, data=data.encode("utf-8"), headers=header)
+        ret = request.urlopen(req)
+        msg = json.loads(ret.read().decode("utf-8"))
+        logging.info(msg)
 
 
 #  http://sn-list.txwy.tw/dy0zV8P8jkNjG17lb0Pxira5K8IK2YjKpVvKA94WhUE.txt?r=1662796700
