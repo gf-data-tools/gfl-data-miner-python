@@ -226,6 +226,7 @@ class DataMiner:
         with repo.config_writer() as cw:
             cw.set_value("user", "name", "github-actions[bot]")
             cw.set_value("user", "email", "<>")
+            cw.set_value("core", "autocrlf", "input")
         repo.git.commit(
             m=self.version_str, author="ZeroRin <ZeroRin@users.noreply.github.com>"
         )
