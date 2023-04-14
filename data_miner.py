@@ -181,7 +181,7 @@ class DataMiner:
     def version_str(self):
         return f"[{self.region.upper()}] {self.clientVersion} | data {self.dataVersion[:7]} | dabao {self.daBaoTime[:-32]}"
 
-    def update_raw_resource(self, force=False):
+    def update_raw_resource(self, force=False, extract_only=False):
         if os.path.exists(self.raw_dir):
             shutil.rmtree(self.raw_dir)
         if os.path.exists(self.data_dir):
@@ -208,7 +208,10 @@ class DataMiner:
 
         logging.info("New data available")
         logging.info("Initializing Repo")
-        repo = Repo.clone_from(self.git_url, to_path=self.data_dir, depth=1)
+        if Path(self.data_dir).exists():
+            repo = Repo(self.data_dir)
+        else:
+            repo = Repo.clone_from(self.git_url, to_path=self.data_dir, depth=1)
         self.remove_old_data()
         self.get_asset_bundles()
         self.get_stc()
@@ -315,8 +318,8 @@ class DataMiner:
         dst_dir = os.path.join(self.data_dir, "stc")
         os.makedirs(dst_dir, exist_ok=True)
 
-        logging.info(f"Formating json from stc files")
         for f in os.listdir(stc_dir):
+            logging.info(f"Formating {f}")
             id, ext = os.path.splitext(f)
             if ext != ".stc":
                 continue
@@ -376,6 +379,7 @@ if __name__ == "__main__":
         "region", nargs="+", choices=["ch", "tw", "kr", "us", "jp", "at"]
     )
     parser.add_argument("--force", "-f", action="store_true")
+    parser.add_argument("--extract_only", "-e", action="store_true")
     parser.add_argument(
         "--loglevel",
         default="INFO",
@@ -393,7 +397,7 @@ if __name__ == "__main__":
                 force=True,
             )
             data_miner = DataMiner(region)
-            data_miner.update_raw_resource(args.force)
+            data_miner.update_raw_resource(args.force, args.extract_only)
         except Exception as e:
             logging.error(traceback.format_exc())
             logging.error(f"Extraction failed due to {e}")

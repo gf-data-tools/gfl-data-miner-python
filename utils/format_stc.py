@@ -102,8 +102,6 @@ def format_stc(stc: str, mapping: str, long=False):
     reader.skip_bytes(4)
     offset = reader.read_int()
     reader.seek(offset)
-    if code == 5146 and long:
-        reader.seek(95)
     for _ in range(row):
         record = OrderedDict()
         for key, id in zip(stc_conf["fields"], type_ids):
