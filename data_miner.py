@@ -387,6 +387,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     error = False
+    update = False
     for region in args.region:
         print(f"::group::{region.upper()} Server")
         try:
@@ -397,7 +398,9 @@ if __name__ == "__main__":
                 force=True,
             )
             data_miner = DataMiner(region)
-            data_miner.update_raw_resource(args.force, args.extract_only)
+            u = data_miner.update_raw_resource(args.force, args.extract_only)
+            if u:
+                update = True
         except Exception as e:
             logging.error(traceback.format_exc())
             logging.error(f"Extraction failed due to {e}")
@@ -405,4 +408,6 @@ if __name__ == "__main__":
         print("::endgroup::")
     if error:
         raise RuntimeError("Error during execution")
+    if update:
+        GithubEnv()["update_detected"] = "true"
 # %%
