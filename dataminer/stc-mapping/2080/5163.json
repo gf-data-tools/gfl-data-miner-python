@@ -1,0 +1,9 @@
+{
+    "name": "fight_type",
+    "fields": [
+        "id",
+        "name",
+        "code",
+        "desc"
+    ]
+}

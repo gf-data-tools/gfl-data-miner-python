@@ -1,0 +1,7 @@
+{
+    "name": "battle_formula",
+    "fields": [
+        "id",
+        "formula"
+    ]
+}

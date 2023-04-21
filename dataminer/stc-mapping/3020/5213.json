@@ -1,0 +1,11 @@
+{
+    "name": "event_lottery",
+    "fields": [
+        "id",
+        "lottery_ids",
+        "start_time",
+        "end_time",
+        "left_code",
+        "bg_code"
+    ]
+}

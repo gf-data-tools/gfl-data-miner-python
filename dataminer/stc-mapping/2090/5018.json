@@ -1,0 +1,8 @@
+{
+    "name": "squad_chip_exp",
+    "fields": [
+        "lv",
+        "exp",
+        "strength_coef"
+    ]
+}

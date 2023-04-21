@@ -1,0 +1,17 @@
+{
+    "name": "event_prize_level",
+    "fields": [
+        "id",
+        "name",
+        "type",
+        "value",
+        "condition",
+        "start_time",
+        "end_time",
+        "prize_start_time",
+        "prize_end_time",
+        "left_icon",
+        "background",
+        "notice_txt"
+    ]
+}

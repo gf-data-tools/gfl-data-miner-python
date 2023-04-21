@@ -1,0 +1,10 @@
+{
+    "name": "related_story",
+    "fields": [
+        "id",
+        "story_campaign_id",
+        "mindupdate_story_id",
+        "fetter_id",
+        "skin_id"
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "equip_group",
+    "fields": [
+        "id",
+        "name",
+        "des",
+        "code",
+        "equip_unit",
+        "group_skill"
+    ]
+}

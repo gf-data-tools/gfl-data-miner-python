@@ -1,0 +1,10 @@
+{
+    "name": "bingo_task_type",
+    "fields": [
+        "id",
+        "task_type",
+        "title",
+        "content",
+        "function_control_id"
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "name": "career_quest_grade",
+    "fields": [
+        "id",
+        "group",
+        "grade",
+        "name",
+        "description"
+    ]
+}

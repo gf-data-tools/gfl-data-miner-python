@@ -1,0 +1,10 @@
+{
+    "name": "fairy_charavoice",
+    "fields": [
+        "id",
+        "name",
+        "code",
+        "is_hidden",
+        "is_fetter"
+    ]
+}

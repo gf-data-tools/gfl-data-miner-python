@@ -1,0 +1,16 @@
+{
+    "name": "function_skill_config",
+    "fields": [
+        "id",
+        "name",
+        "level",
+        "group_id",
+        "code",
+        "description",
+        "arguments",
+        "max_level",
+        "is_show",
+        "type",
+        "function_skill"
+    ]
+}

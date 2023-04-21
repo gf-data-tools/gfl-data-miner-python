@@ -1,0 +1,7 @@
+{
+    "name": "mission_mapped",
+    "fields": [
+        "id",
+        "mapped_missions"
+    ]
+}

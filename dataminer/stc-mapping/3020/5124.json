@@ -1,0 +1,10 @@
+{
+    "name": "bondage_lines",
+    "fields": [
+        "id",
+        "main_id",
+        "sub_id",
+        "lines_code",
+        "lines_txt"
+    ]
+}

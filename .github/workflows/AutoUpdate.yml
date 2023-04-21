@@ -26,12 +26,12 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
       - name: Data Miner
-        env:
-          PERSONAL_TOKEN: ${{ secrets.TEST }}
-          AUTHOR: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
-          DINGTALK_TOKEN: ${{ secrets.DINGTALK_TOKEN }}
-        run: python data_miner.py ${{ inputs.cmdargs || 'at tw kr jp us ch' }} 
-
+        run: |
+          python -m dataminer \
+          --author "${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>" \
+          --github_token ${{ secrets.TEST }} \
+          --dingtalk_token ${{ secrets.DINGTALK_TOKEN }} \
+          ${{ inputs.cmdargs || 'at tw kr jp us ch' }} 
       - name: Dispatch submodule_sync event
         uses: mvasigh/dispatch-action@main
         if: ${{ env.update_detected }}

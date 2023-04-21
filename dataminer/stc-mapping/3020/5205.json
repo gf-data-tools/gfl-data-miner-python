@@ -1,0 +1,13 @@
+{
+    "name": "return_player_task",
+    "fields": [
+        "id",
+        "type",
+        "count",
+        "title",
+        "describe",
+        "function_control_id",
+        "prize_id",
+        "activity_bonus"
+    ]
+}

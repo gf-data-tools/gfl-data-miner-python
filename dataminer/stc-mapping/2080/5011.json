@@ -1,0 +1,10 @@
+{
+    "name": "squad_grid",
+    "fields": [
+        "id",
+        "grid",
+        "grid_number",
+        "rank_weight",
+        "code"
+    ]
+}

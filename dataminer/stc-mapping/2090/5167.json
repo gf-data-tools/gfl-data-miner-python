@@ -1,0 +1,20 @@
+{
+    "name": "career_quest",
+    "fields": [
+        "id",
+        "type",
+        "unlock_lv",
+        "unlock_ids",
+        "unlock_label",
+        "count",
+        "prize_id",
+        "title",
+        "content",
+        "unlock_course",
+        "new_type",
+        "grade_id",
+        "sort",
+        "condition",
+        "new_unlock_ids"
+    ]
+}

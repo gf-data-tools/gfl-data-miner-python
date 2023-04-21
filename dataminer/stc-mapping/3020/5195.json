@@ -1,0 +1,12 @@
+{
+    "name": "daily_map",
+    "fields": [
+        "id",
+        "coordinate",
+        "type",
+        "random",
+        "start",
+        "prize_tag",
+        "neighbor"
+    ]
+}
