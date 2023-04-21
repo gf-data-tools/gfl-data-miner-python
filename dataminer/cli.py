@@ -45,6 +45,7 @@ def cli():
             data_miner.download_stc()
             data_miner.process_stc()
             data_miner.process_catchdata()
+            data_miner.format_hjson()
             if data_miner.commit_repo(push=True):
                 GithubEnv()["update_detected"] = "true"
         print("::endgroup::")
