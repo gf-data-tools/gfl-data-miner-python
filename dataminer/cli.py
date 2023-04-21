@@ -3,7 +3,7 @@ import os
 
 from logger_tt import logger, setup_logging
 
-from .data_miner import DataMiner
+from .data_miner import DataMiner, GithubEnv
 
 
 def cli():
@@ -44,4 +44,5 @@ def cli():
             data_miner.download_stc()
             data_miner.process_stc()
             data_miner.process_catchdata()
-            data_miner.commit_repo(push=True)
+            if data_miner.commit_repo(push=True):
+                GithubEnv()["update_detected"] = "true"

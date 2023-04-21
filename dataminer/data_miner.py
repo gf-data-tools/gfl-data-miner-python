@@ -1,15 +1,12 @@
-import argparse
 import base64
 import io
 import json
 import os
 import re
 import shutil
-import sys
 import tempfile
-import traceback
 from dataclasses import dataclass
-from functools import cached_property, partial
+from functools import cached_property
 from gzip import GzipFile
 from pathlib import Path
 from typing import *
@@ -18,13 +15,9 @@ from zipfile import ZipFile
 
 import git
 import hjson
-import pandas as pd
-import pyjson5
-from compact_json.formatter import EolStyle, Formatter
 from gf_utils.crypto import get_des_encrypted, get_md5_hash, xor_decrypt
 from gf_utils.download import download
 from gf_utils.stc_data import GameData
-from git import Git
 from git.repo import Repo
 from logger_tt import logger
 
@@ -131,8 +124,10 @@ class DataMiner:
             if push:
                 self.repo.remote().push()
                 self.dingtalk_notice(message)
+                return True
         except git.GitCommandError as e:
             logger.error(e)
+        return False
 
     def dingtalk_notice(self, message: str):
         if not self.dingtalk_token:
