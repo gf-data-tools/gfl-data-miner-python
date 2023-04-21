@@ -28,6 +28,7 @@ def cli():
         hdlr.setLevel(args.loglevel)
 
     for region in args.region:
+        print(f"::group::{region.upper()} Server")
         data_miner = DataMiner(
             region=region,
             data_dir=f"data/{region}",
@@ -46,3 +47,4 @@ def cli():
             data_miner.process_catchdata()
             if data_miner.commit_repo(push=True):
                 GithubEnv()["update_detected"] = "true"
+        print("::endgroup::")
