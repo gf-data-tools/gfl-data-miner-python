@@ -162,7 +162,7 @@ class DataMiner:
         if client_version < 10000:
             return client_version
         elif client_version == 29999:
-            return 3010
+            return 3020
         else:
             return client_version // 10
 
