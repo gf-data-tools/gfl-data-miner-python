@@ -17,7 +17,7 @@ from zipfile import ZipFile
 import git
 import hjson
 import urllib3
-from gf_utils2.stc_data import GameData
+from gf_utils2.gamedata import GameData
 from gf_utils.crypto import get_des_encrypted, get_md5_hash, xor_decrypt
 from gf_utils.download import download
 from git.repo import Repo
