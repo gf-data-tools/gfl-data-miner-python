@@ -164,7 +164,7 @@ class DataMiner:
 
         resp = https.request(
             method="POST",
-            url=self.hosts["asset_host"],
+            url=self.hosts["transit_host"],
             fields={
                 "c": "game",
                 "a": "newserverList",
