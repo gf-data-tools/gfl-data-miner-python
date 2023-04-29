@@ -27,6 +27,7 @@ def cli():
     for hdlr in logger_cfg.root_handlers:
         hdlr.setLevel(args.loglevel)
 
+    error = False
     for region in args.region:
         try:
             print(f"::group::{region.upper()} Server")
@@ -52,4 +53,6 @@ def cli():
             print("::endgroup::")
         except Exception as e:
             logger.exception(repr(e))
-    raise e
+            error = True
+    if error:
+        raise RuntimeError("Error during execution")
