@@ -337,6 +337,7 @@ class DataMiner:
                 )
 
     def update_available(self):
+        logger.info(self.version_str)
         return (
             self.local_version["data_version"] != self.index_version["data_version"]
             or self.local_version["dabao_time"] != self.resdata["daBaoTime"]
