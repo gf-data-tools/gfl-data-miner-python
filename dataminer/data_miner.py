@@ -17,9 +17,9 @@ from zipfile import ZipFile
 import git
 import hjson
 import urllib3
+from gf_utils2.stc_data import GameData
 from gf_utils.crypto import get_des_encrypted, get_md5_hash, xor_decrypt
 from gf_utils.download import download
-from gf_utils.stc_data import GameData
 from git.repo import Repo
 from logger_tt import logger
 
@@ -177,7 +177,7 @@ class DataMiner:
         logger.info(f"Client Version: {client}")
         return client
 
-    @property
+    @cached_property
     def min_version(self):
         client_version = int(self.client_version)
         min_version = (client_version + 10) // 10
@@ -320,21 +320,20 @@ class DataMiner:
         logger.info("Formatting hjson for human friendly output")
         format_dir = self.data_dir / "formatted"
         format_dir.mkdir(parents=True, exist_ok=True)
-        for tgt in ["catchdata", "stc"]:
-            data = GameData(
-                stc_dir=self.data_dir / tgt,
-                table_dir=self.data_dir / "asset/table",
-                to_dict=False,
-                fill_empty=False,
+        data = GameData(
+            stc_dir=[self.data_dir / tgt for tgt in ["catchdata", "stc"]],
+            table_dir=self.data_dir / "asset/table",
+            to_dict=False,
+            fill_empty=False,
+        )
+        for name, table in data.items():
+            for record in table:
+                for k, v in dict(record).items():
+                    if v == "" or v == "0" or v == 0:
+                        record.pop(k)
+            (format_dir / f"{name}.hjson").write_text(
+                hjson.dumps(table), encoding="utf-8"
             )
-            for name, table in data.items():
-                for record in table:
-                    for k, v in dict(record).items():
-                        if v == "" or v == "0" or v == 0:
-                            record.pop(k)
-                (format_dir / f"{name}.hjson").write_text(
-                    hjson.dumps(table), encoding="utf-8"
-                )
 
     def update_available(self):
         logger.info(self.version_str)
