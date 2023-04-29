@@ -5,6 +5,7 @@ import os
 import re
 import shutil
 import tempfile
+import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from functools import cached_property
 from gzip import GzipFile
@@ -15,6 +16,7 @@ from zipfile import ZipFile
 
 import git
 import hjson
+import urllib3
 from gf_utils.crypto import get_des_encrypted, get_md5_hash, xor_decrypt
 from gf_utils.download import download
 from gf_utils.stc_data import GameData
@@ -96,7 +98,7 @@ class DataMiner:
         db_time = f"{d}_{h:>02}_{m:>02}"
         return (
             f"{self.region.upper()} "
-            f'| {self.index_version["client_version"]} '
+            f"| {self.client_version} "
             f'| data {self.index_version["data_version"][:7]} '
             f"| dabao {db_time}"
         )
@@ -104,7 +106,7 @@ class DataMiner:
     def commit_repo(self, push=False):
         version_info = dict(
             data_version=self.index_version["data_version"],
-            client_version=self.index_version["client_version"],
+            client_version=self.client_version,
             ab_version=self.index_version["ab_version"],
             dabao_time=self.resdata["daBaoTime"],
         )
@@ -156,15 +158,31 @@ class DataMiner:
         logger.info(f"Response: {response}")
         return hjson.loads(response)
 
+    @cached_property
+    def client_version(self):
+        https = urllib3.PoolManager(cert_reqs="CERT_NONE")
+
+        resp = https.request(
+            method="POST",
+            url=self.hosts["asset_host"],
+            fields={
+                "c": "game",
+                "a": "newserverList",
+                "channel": self.hosts["channel"],
+            },
+            headers={},
+        )
+        tree = ET.parse(io.StringIO(resp.data.decode()))
+        client = tree.getroot().find("./config/client_version").text
+        logger.info(f"Client Version: {client}")
+        return client
+
     @property
     def min_version(self):
-        client_version = int(self.index_version["client_version"])
-        if client_version < 10000:
-            return client_version
-        elif client_version == 29999:
-            return 3020
-        else:
-            return client_version // 10
+        client_version = int(self.client_version)
+        min_version = (client_version + 10) // 10
+        logger.info(f"Min Version: {min_version}")
+        return min_version
 
     @property
     def ab_version(self):
