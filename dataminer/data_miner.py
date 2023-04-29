@@ -180,7 +180,7 @@ class DataMiner:
     @cached_property
     def min_version(self):
         client_version = int(self.client_version)
-        min_version = (client_version + 10) // 10
+        min_version = round(client_version / 10)
         logger.info(f"Min Version: {min_version}")
         return min_version
 
