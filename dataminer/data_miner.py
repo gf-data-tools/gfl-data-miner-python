@@ -324,7 +324,6 @@ class DataMiner:
             stc_dir=[self.data_dir / tgt for tgt in ["catchdata", "stc"]],
             table_dir=self.data_dir / "asset/table",
             to_dict=False,
-            fill_empty=False,
         )
         for name, table in data.items():
             for record in table:
