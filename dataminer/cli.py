@@ -28,24 +28,28 @@ def cli():
         hdlr.setLevel(args.loglevel)
 
     for region in args.region:
-        print(f"::group::{region.upper()} Server")
-        data_miner = DataMiner(
-            region=region,
-            data_dir=f"data/{region}",
-            github_repo=f"gf-data-tools/gf-data-{region}",
-            github_token=args.github_token,
-            git_author="ZeroRin <ZeroRin@users.noreply.github.com>",
-            dingtalk_token=args.dingtalk_token,
-        )
-        if args.force or data_miner.update_available():
-            data_miner.repo
-            data_miner.clear_local_data()
-            data_miner.download_asset_bundles()
-            data_miner.unpack_assets()
-            data_miner.download_stc()
-            data_miner.process_stc()
-            data_miner.process_catchdata()
-            data_miner.format_hjson()
-            if data_miner.commit_repo(push=True):
-                GithubEnv()["update_detected"] = "true"
-        print("::endgroup::")
+        try:
+            print(f"::group::{region.upper()} Server")
+            data_miner = DataMiner(
+                region=region,
+                data_dir=f"data/{region}",
+                github_repo=f"gf-data-tools/gf-data-{region}",
+                github_token=args.github_token,
+                git_author="ZeroRin <ZeroRin@users.noreply.github.com>",
+                dingtalk_token=args.dingtalk_token,
+            )
+            if args.force or data_miner.update_available():
+                data_miner.repo
+                data_miner.clear_local_data()
+                data_miner.download_asset_bundles()
+                data_miner.unpack_assets()
+                data_miner.download_stc()
+                data_miner.process_stc()
+                data_miner.process_catchdata()
+                data_miner.format_hjson()
+                if data_miner.commit_repo(push=True):
+                    GithubEnv()["update_detected"] = "true"
+            print("::endgroup::")
+        except Exception as e:
+            logger.exception(repr(e))
+    raise e
