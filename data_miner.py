@@ -408,8 +408,8 @@ if __name__ == "__main__":
             logging.error(f"Extraction failed due to {e}")
             error = True
         print("::endgroup::")
-    if error:
-        raise RuntimeError("Error during execution")
     if update:
         GithubEnv()["update_detected"] = "true"
+    if error:
+        raise RuntimeError("Error during execution")
 # %%
