@@ -35,7 +35,7 @@ jobs:
           ${{ inputs.cmdargs || (github.event.schedule == '0,30 2-19 * * 4' && 'ch' || 'at tw kr jp us ch') }} 
       - name: Dispatch submodule_sync event
         uses: mvasigh/dispatch-action@main
-        if: ${{ env.update_detected }}
+        if: (success() || failure()) && ${{ env.update_detected }}
         with:
           token: ${{ secrets.TEST }}
           repo: 'GF_Data_Tools'
