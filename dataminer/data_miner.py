@@ -197,9 +197,10 @@ class DataMiner:
             if content.is_dir() and content.name != ".git":
                 shutil.rmtree(content)
 
-    def download_stc(self):
+    def download_stc(self, data_version=None):
         logger.info(f"Downloading stc data")
-        data_version = self.index_version["data_version"]
+        if data_version is None:
+            data_version = self.index_version["data_version"]
         hash = get_md5_hash(data_version)
         stc_url = f"{self.hosts['cdn_host']}/data/stc_{data_version}{hash}.zip"
         stc_fp = os.path.join(self.tmp_dir.name, "stc.zip")
