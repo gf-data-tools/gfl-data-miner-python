@@ -34,7 +34,7 @@ jobs:
           --dingtalk_token ${{ secrets.DINGTALK_TOKEN }} \
           --qq_channel ${{ secrets.QQ_CHANNEL }} \
           --qq_token ${{ secrets.QQ_TOKEN }} \
-          ${{ inputs.cmdargs || (github.event.schedule == '0,30 2-19 * * 4' && 'ch' || 'tw kr jp us ch') }} 
+          ${{ inputs.cmdargs || (github.event.schedule == '0,30 2-19 * * 4' && 'ch' || 'at tw kr jp us ch') }} 
       - name: Dispatch submodule_sync event
         uses: mvasigh/dispatch-action@main
         if: always() && env.update_detected
