@@ -32,6 +32,8 @@ jobs:
           --author "${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>" \
           --github_token ${{ secrets.TEST }} \
           --dingtalk_token ${{ secrets.DINGTALK_TOKEN }} \
+          --qq_channel ${{ secrets.QQ_CHANNEL }} \
+          --qq_token ${{ secrets.QQ_TOKEN }} \
           ${{ inputs.cmdargs || (github.event.schedule == '0,30 2-19 * * 4' && 'ch' || 'tw kr jp us ch') }} 
       - name: Dispatch submodule_sync event
         uses: mvasigh/dispatch-action@main

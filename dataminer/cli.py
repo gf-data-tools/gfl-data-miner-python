@@ -20,6 +20,8 @@ def cli():
     parser.add_argument("--author", type=str, default="")
     parser.add_argument("--github_token", type=str, default="")
     parser.add_argument("--dingtalk_token", type=str, default="")
+    parser.add_argument("--qq_channel", type=str, default="")
+    parser.add_argument("--qq_token", type=str, default="")
 
     args = parser.parse_args()
 
@@ -38,6 +40,8 @@ def cli():
                 github_token=args.github_token,
                 git_author="ZeroRin <ZeroRin@users.noreply.github.com>",
                 dingtalk_token=args.dingtalk_token,
+                qq_channel=args.qq_channel,
+                qq_token=args.qq_token,
             )
             if args.force or data_miner.update_available():
                 data_miner.repo

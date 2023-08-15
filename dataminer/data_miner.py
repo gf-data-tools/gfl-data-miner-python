@@ -48,6 +48,8 @@ class DataMiner:
     lua_key: str = "lvbb3zfc3faa8mq1rx0r0gl61b4338fa"
     dat_key: str = "c88d016d261eb80ce4d6e41a510d4048"
     dingtalk_token: str = ""
+    qq_channel: str = ""
+    qq_token: str = ""
 
     def __post_init__(self):
         self.data_dir = Path(self.data_dir)
@@ -145,6 +147,26 @@ class DataMiner:
         msg = json.loads(ret.read().decode("utf-8"))
         logger.info(f'Send dingtalk message "{message}"')
         logger.info(f"Return: {msg}")
+
+    def qq_notice(self, message: str):
+        if not (self.qq_channel and self.qq_token):
+            logger.warning(f'Cannot send message "{message}"')
+            return
+        try:
+            req = request.Request(
+                url=f"https://sandbox.api.sgroup.qq.com/channels/{self.qq_channel}/messages",
+                headers={
+                    "Authorization": f"Bot {self.qq_token}",
+                    "Content-Type": "application/json",
+                },
+                data=json.dumps(dict(content=message)).encode(),
+            )
+
+            resp = request.urlopen(req)
+            data = json.loads(resp.read().decode())
+            logger.info(data)
+        except Exception as e:
+            logger.exception(repr(e))
 
     @cached_property
     def hosts(self):
