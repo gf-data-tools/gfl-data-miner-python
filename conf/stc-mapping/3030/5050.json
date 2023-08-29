@@ -1,8 +1,0 @@
-{
-    "name": "explore_script",
-    "fields": [
-        "id",
-        "type",
-        "code"
-    ]
-}

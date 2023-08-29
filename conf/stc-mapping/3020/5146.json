@@ -1,9 +1,0 @@
-{
-    "name": "chess_game_config",
-    "fields": [
-        "id",
-        "parameter_name",
-        "parameter_type",
-        "parameter_value"
-    ]
-}

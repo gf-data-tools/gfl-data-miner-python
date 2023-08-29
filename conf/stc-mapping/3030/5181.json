@@ -1,7 +1,0 @@
-{
-    "name": "drop_package",
-    "fields": [
-        "id",
-        "content_ids"
-    ]
-}

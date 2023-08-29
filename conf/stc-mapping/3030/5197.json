@@ -1,7 +1,0 @@
-{
-    "name": "team_tag",
-    "fields": [
-        "id",
-        "name"
-    ]
-}

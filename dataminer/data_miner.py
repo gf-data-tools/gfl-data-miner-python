@@ -192,11 +192,14 @@ class DataMiner:
                 "c": "game",
                 "a": "newserverList",
                 "channel": self.hosts["channel"],
+                "check_version": "30300",
             },
             headers={},
         )
-        tree = ET.parse(io.StringIO(resp.data.decode()))
+        data = resp.data.decode()
+        tree = ET.parse(io.StringIO(data))
         client = tree.getroot().find("./config/client_version").text
+        logger.info(self.hosts["transit_host"] + "\n" + data)
         logger.info(f"Client Version: {client}")
         return client
 
@@ -226,6 +229,7 @@ class DataMiner:
             data_version = self.index_version["data_version"]
         hash = get_md5_hash(data_version)
         stc_url = f"{self.hosts['cdn_host']}/data/stc_{data_version}{hash}.zip"
+        logger.info(stc_url)
         stc_fp = os.path.join(self.tmp_dir.name, "stc.zip")
         download(stc_url, stc_fp)
         ZipFile(stc_fp).extractall(os.path.join(self.tmp_dir.name, "stc"))
@@ -263,7 +267,7 @@ class DataMiner:
             logger.info(f"Formating {f}")
             stc = stc_dir / f"{id}.stc"
             mapping = mapping_dir / f"{id}.json"
-            name, data = format_stc(stc, mapping, self.min_version == 3020)
+            name, data = format_stc(stc, mapping, self.min_version >= 3020)
             # (Path(dst_dir) / f"{name}.json").write_text(self.json_formatter.serialize(data))
             with (dst_dir / f"{name}.json").open("w", encoding="utf-8") as f:
                 json.dump(data, f, indent=4, ensure_ascii=False)

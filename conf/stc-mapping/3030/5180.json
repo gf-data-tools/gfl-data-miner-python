@@ -1,9 +1,0 @@
-{
-    "name": "drop_content",
-    "fields": [
-        "id",
-        "package_id",
-        "content_type",
-        "prize_id"
-    ]
-}

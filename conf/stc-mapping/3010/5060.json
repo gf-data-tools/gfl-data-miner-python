@@ -1,9 +1,0 @@
-{
-    "name": "explore_affair_server",
-    "fields": [
-        "id",
-        "content",
-        "background",
-        "script_type"
-    ]
-}

@@ -1,8 +1,0 @@
-{
-    "name": "skin_class",
-    "fields": [
-        "id",
-        "theme_type",
-        "name"
-    ]
-}

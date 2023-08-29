@@ -1,8 +1,0 @@
-{
-    "name": "explore_area",
-    "fields": [
-        "id",
-        "name",
-        "background"
-    ]
-}

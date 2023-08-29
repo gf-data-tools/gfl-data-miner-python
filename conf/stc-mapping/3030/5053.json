@@ -1,8 +1,0 @@
-{
-    "name": "explore_destination",
-    "fields": [
-        "id",
-        "area_id",
-        "background"
-    ]
-}

@@ -1,9 +1,0 @@
-{
-    "name": "daily_mission",
-    "fields": [
-        "id",
-        "difficulty_type",
-        "difficulty_recommend",
-        "pic"
-    ]
-}
