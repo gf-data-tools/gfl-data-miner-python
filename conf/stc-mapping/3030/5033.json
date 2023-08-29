@@ -1,0 +1,10 @@
+{
+    "name": "carnival_task_type",
+    "fields": [
+        "id",
+        "type",
+        "title",
+        "content",
+        "function_control_id"
+    ]
+}

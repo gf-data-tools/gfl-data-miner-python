@@ -1,0 +1,10 @@
+{
+    "name": "mall_classification",
+    "fields": [
+        "id",
+        "parent_id",
+        "sort",
+        "name",
+        "description"
+    ]
+}

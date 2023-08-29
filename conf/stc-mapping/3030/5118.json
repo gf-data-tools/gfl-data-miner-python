@@ -1,0 +1,12 @@
+{
+    "name": "mission_echo_info",
+    "fields": [
+        "id",
+        "mission_id",
+        "title",
+        "content",
+        "subtitle",
+        "interval",
+        "character"
+    ]
+}

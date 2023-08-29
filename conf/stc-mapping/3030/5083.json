@@ -1,0 +1,7 @@
+{
+    "name": "commander_color",
+    "fields": [
+        "id",
+        "icon_colors"
+    ]
+}
