@@ -192,7 +192,7 @@ class DataMiner:
                 "c": "game",
                 "a": "newserverList",
                 "channel": self.hosts["channel"],
-                "check_version": "30300",
+                "check_version": "30300" if self.region == "at" else "30200",
             },
             headers={},
         )
