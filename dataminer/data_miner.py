@@ -197,9 +197,9 @@ class DataMiner:
             headers={},
         )
         data = resp.data.decode()
+        logger.info(self.hosts["transit_host"] + "\n" + data)
         tree = ET.parse(io.StringIO(data))
         client = tree.getroot().find("./config/client_version").text
-        logger.info(self.hosts["transit_host"] + "\n" + data)
         logger.info(f"Client Version: {client}")
         return client
 
