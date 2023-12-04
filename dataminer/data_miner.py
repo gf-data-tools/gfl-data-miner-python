@@ -183,6 +183,10 @@ class DataMiner:
 
     @cached_property
     def client_version(self):
+        return self.index_version["client_version"]
+
+    @cached_property
+    def client_version_(self):
         https = urllib3.PoolManager(cert_reqs="CERT_NONE")
 
         resp = https.request(
