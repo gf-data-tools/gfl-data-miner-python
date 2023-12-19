@@ -259,7 +259,7 @@ class DataMiner:
     def process_stc(self):
         mapping_dir = (
             Path(__file__).parent
-            / f"stc-mapping/{round(self.index_version['client_version']/10)}"
+            / f"stc-mapping/{round(int(self.index_version['client_version'])/10)}"
         )
 
         logger.info(f"Reading stc-mapping from {mapping_dir}")
