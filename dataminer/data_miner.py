@@ -182,11 +182,11 @@ class DataMiner:
         return hjson.loads(response)
 
     @cached_property
-    def client_version(self):
+    def client_version_(self):
         return self.index_version["client_version"]
 
     @cached_property
-    def client_version_(self):
+    def client_version(self):
         https = urllib3.PoolManager(cert_reqs="CERT_NONE")
 
         resp = https.request(
