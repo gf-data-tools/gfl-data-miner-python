@@ -257,7 +257,10 @@ class DataMiner:
                     json.dump(data[key], f, indent=4, ensure_ascii=False)
 
     def process_stc(self):
-        mapping_dir = Path(__file__).parent / f"stc-mapping/{self.min_version}"
+        mapping_dir = (
+            Path(__file__).parent
+            / f"stc-mapping/{round(self.index_version['client_version']/10)}"
+        )
 
         logger.info(f"Reading stc-mapping from {mapping_dir}")
         stc_dir = Path(self.tmp_dir.name) / "stc"
