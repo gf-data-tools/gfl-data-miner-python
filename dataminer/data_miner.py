@@ -322,7 +322,8 @@ class DataMiner:
             "asset_texttable",
             "asset_textes",
             "asset_textlangue",
-            "asset_assetother",
+            "asset_textlpatch",
+            "asset_csv",
         ]
         for ab_info in self.resdata["BaseAssetBundles"]:
             if ab_info["assetBundleName"] in targets:
