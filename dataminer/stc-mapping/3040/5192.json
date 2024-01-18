@@ -1,0 +1,8 @@
+{
+    "name": "fairy_type",
+    "fields": [
+        "id",
+        "name",
+        "en_name"
+    ]
+}

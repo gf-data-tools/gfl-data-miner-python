@@ -177,6 +177,7 @@ class DataMiner:
     def index_version(self):
         logger.info(f"Requesting version")
         version_url = self.hosts["game_host"] + "/Index/version"
+        logger.info(version_url)
         response = request.urlopen(version_url).read().decode()
         logger.info(f"Response: {response}")
         return hjson.loads(response)

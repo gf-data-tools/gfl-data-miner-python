@@ -1,9 +1,12 @@
 import argparse
 import os
+import socket
 
 from logger_tt import logger, setup_logging
 
 from .data_miner import DataMiner, GithubEnv
+
+socket.setdefaulttimeout(10)
 
 
 def cli():
