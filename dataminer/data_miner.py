@@ -176,7 +176,7 @@ class DataMiner:
     @cached_property
     def index_version(self):
         logger.info(f"Requesting version")
-        version_url = self.hosts["game_host"] + "/Index/version"
+        version_url = self.host_server + "Index/version"
         logger.info(version_url)
         response = request.urlopen(version_url).read().decode()
         logger.info(f"Response: {response}")
@@ -187,7 +187,7 @@ class DataMiner:
         return self.index_version["client_version"]
 
     @cached_property
-    def client_version(self):
+    def server_info(self):
         https = urllib3.PoolManager(cert_reqs="CERT_NONE")
 
         resp = https.request(
@@ -204,7 +204,17 @@ class DataMiner:
         data = resp.data.decode()
         logger.info(self.hosts["transit_host"] + "\n" + data)
         tree = ET.parse(io.StringIO(data))
-        client = tree.getroot().find("./config/client_version").text
+        return tree
+
+    @cached_property
+    def host_server(self):
+        server = self.server_info.getroot().find("./server/addr").text
+        logger.info(f"Server Addr: {server}")
+        return server
+
+    @cached_property
+    def client_version(self):
+        client = self.server_info.getroot().find("./config/client_version").text
         logger.info(f"Client Version: {client}")
         return client
 
