@@ -76,9 +76,9 @@ class DataMiner:
             req = request.Request(
                 f"https://raw.githubusercontent.com/{self.github_repo}/main/{filepath}",
                 headers={
-                    "Authorization": f"Bearer {self.github_token}"
-                    if self.github_token
-                    else ""
+                    "Authorization": (
+                        f"Bearer {self.github_token}" if self.github_token else ""
+                    )
                 },
             )
             return request.urlopen(req).read().decode("utf-8")
@@ -114,7 +114,7 @@ class DataMiner:
         )
         (self.data_dir / "version.json").write_text(json.dumps(version_info, indent=2))
         (self.data_dir / "resdata_no_hash.json").write_text(
-            json.dumps(self.resdata, indent=2)
+            json.dumps(self.resdata, indent=2, ensure_ascii=False)
         )
 
         message = self.version_str
