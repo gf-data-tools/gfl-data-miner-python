@@ -1,0 +1,8 @@
+{
+    "name": "vehicle_component_group",
+    "fields": [
+        "id",
+        "name",
+        "component_type"
+    ]
+}

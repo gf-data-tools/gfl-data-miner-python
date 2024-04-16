@@ -1,0 +1,10 @@
+{
+    "name": "gun_tag",
+    "fields": [
+        "id",
+        "tag",
+        "tag_type",
+        "description",
+        "is_show"
+    ]
+}

@@ -1,0 +1,9 @@
+{
+    "name": "daily_note",
+    "fields": [
+        "id",
+        "name",
+        "title",
+        "code"
+    ]
+}

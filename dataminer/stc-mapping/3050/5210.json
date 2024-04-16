@@ -1,0 +1,11 @@
+{
+    "name": "daily_event",
+    "fields": [
+        "id",
+        "name",
+        "hint",
+        "script",
+        "options",
+        "notes"
+    ]
+}

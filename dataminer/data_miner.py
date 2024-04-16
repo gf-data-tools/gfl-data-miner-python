@@ -294,15 +294,14 @@ class DataMiner:
         bkey = base64.standard_b64decode(self.res_key)
         biv = base64.standard_b64decode(self.res_iv)
         if self.region == "at":
-            fname = (
-                f"{self.min_version}_alpha2020_{self.ab_version}_AndroidResConfigData"
-            )
+            fname = f"{self.min_version}_alpha2020_{self.ab_version}_AndroidResConfigData2018"
         else:
             fname = f"{self.min_version}_{self.ab_version}_AndroidResConfigData"
         logger.debug(f"resdata name {fname}")
 
         en = get_des_encrypted(fname, bkey, biv[:8])
         res_config = base64.standard_b64encode(en).decode("utf-8")
+        logger.debug(f"encoded {res_config}")
         res_config = re.sub(r"[^a-zA-Z0-9]", "", res_config) + ".txt"
         resdata_url = self.hosts["asset_host"] + "/" + res_config
 

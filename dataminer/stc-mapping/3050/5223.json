@@ -1,0 +1,11 @@
+{
+    "name": "vehicle_component_roll_type",
+    "fields": [
+        "id",
+        "name",
+        "type",
+        "roll_code",
+        "skill_id",
+        "group"
+    ]
+}

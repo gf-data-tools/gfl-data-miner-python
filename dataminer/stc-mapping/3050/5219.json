@@ -1,0 +1,9 @@
+{
+    "name": "vehicle_component_type",
+    "fields": [
+        "id",
+        "name",
+        "name_en",
+        "code"
+    ]
+}
