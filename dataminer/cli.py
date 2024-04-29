@@ -57,9 +57,10 @@ def cli():
                 data_miner.format_hjson()
                 if data_miner.commit_repo(push=True):
                     GithubEnv()["update_detected"] = "true"
-            print("::endgroup::")
         except Exception as e:
             logger.exception(repr(e))
             error = True
+        finally:
+            print("::endgroup::")
     if error:
         raise RuntimeError("Error during execution")
