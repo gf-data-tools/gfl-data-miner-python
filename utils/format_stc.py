@@ -16,7 +16,7 @@ class StcReader:
 
     def read_byte(self):
         b = self.file.read(1)
-        return struct.unpack("<B", b)[0]
+        return struct.unpack("<b", b)[0]
 
     def read_ushort(self):
         b = self.file.read(2)
