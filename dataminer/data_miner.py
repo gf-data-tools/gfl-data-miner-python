@@ -96,7 +96,10 @@ class DataMiner:
 
     @property
     def version_str(self):
-        d, h, m = self.resdata["daBaoTime"][:-32].split("_")
+        s = self.resdata["daBaoTime"][:-32]
+        if s.endswith("_"):
+            s = s[:-1]
+        d, h, m = s.split("_")
         db_time = f"{d}_{h:>02}_{m:>02}"
         return (
             f"{self.region.upper()} "
