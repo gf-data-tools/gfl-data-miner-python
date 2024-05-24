@@ -298,7 +298,7 @@ class DataMiner:
         biv = base64.standard_b64decode(self.res_iv)
         if self.region == "at":
             fname = f"{self.min_version}_alpha2020_{self.ab_version}_AndroidResConfigData2018"
-        elif self.region in ["us", "ch"]:
+        elif self.region in ["us", "ch", "tw", "kr"]:
             fname = f"{self.min_version}_{self.ab_version}_AndroidResConfigData2018"
         else:
             fname = f"{self.min_version}_{self.ab_version}_AndroidResConfigData"
