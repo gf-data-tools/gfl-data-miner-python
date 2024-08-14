@@ -1,4 +1,4 @@
-GitPython==3.1.30
+GitPython==3.1.41
 pyjson5==1.6.1
 hjson==3.0.2
 UnityPy==1.8.9
