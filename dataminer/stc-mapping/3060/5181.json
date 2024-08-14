@@ -1,0 +1,9 @@
+{
+    "name": "gun_obtain",
+    "fields": [
+        "obtain_id",
+        "description",
+        "detail",
+        "goto_page_id"
+    ]
+}

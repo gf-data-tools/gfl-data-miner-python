@@ -1,0 +1,12 @@
+{
+    "name": "chess_scorelevel",
+    "fields": [
+        "id",
+        "name",
+        "code",
+        "score_floor",
+        "score_ceilling",
+        "score_get",
+        "prize"
+    ]
+}

@@ -81,11 +81,13 @@ def format_stc(stc: str, mapping: str, long=False):
     type_ids = []
     for _ in range(col):
         type_ids.append(reader.read_byte())
-    assert len(type_ids) >= len(stc_conf["fields"])
+    if len(type_ids) < len(stc_conf["fields"]):
+        logging.warning(f"redundant field in {os.path.split(stc)[-1]}, code {code}")
+        stc_conf["fields"] = stc_conf["fields"][: len(type_ids)]
     if len(type_ids) > len(stc_conf["fields"]):
         logging.warning(f"unknown field in {os.path.split(stc)[-1]}, code {code}")
-    for i in range(len(stc_conf["fields"]), len(type_ids)):
-        stc_conf["fields"].append(f"unk_{i}")
+        for i in range(len(stc_conf["fields"]), len(type_ids)):
+            stc_conf["fields"].append(f"unk_{i}")
 
     format = {
         stc_conf["fields"][i]: {

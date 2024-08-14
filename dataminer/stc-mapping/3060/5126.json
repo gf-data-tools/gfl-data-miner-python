@@ -1,0 +1,11 @@
+{
+    "name": "guild_emoji",
+    "fields": [
+        "id",
+        "group",
+        "emoji_code",
+        "is_locked",
+        "prize",
+        "is_hide"
+    ]
+}

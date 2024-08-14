@@ -1,0 +1,11 @@
+{
+    "name": "fight_environment_skill",
+    "fields": [
+        "id",
+        "name",
+        "desc",
+        "if_display",
+        "code",
+        "skill_group"
+    ]
+}

@@ -1,0 +1,8 @@
+{
+    "name": "mission_intensify_item_config",
+    "fields": [
+        "item_id",
+        "fight_environment_skill",
+        "mission_skill_config"
+    ]
+}

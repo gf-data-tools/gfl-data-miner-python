@@ -1,0 +1,8 @@
+{
+    "name": "squad_exp",
+    "fields": [
+        "lv",
+        "exp",
+        "precise"
+    ]
+}
