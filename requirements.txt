@@ -4,5 +4,5 @@ hjson==3.0.2
 UnityPy==1.8.9
 pycryptodome==3.17
 pandas==1.5.3
-urllib3==1.26.9
+urllib3==1.26.19
 git+https://github.com/gf-data-tools/gf-utils.git
