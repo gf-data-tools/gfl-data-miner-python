@@ -279,17 +279,19 @@ class DataMiner:
         dst_dir.mkdir(parents=True, exist_ok=True)
 
         for f in os.listdir(stc_dir):
-            id, ext = os.path.splitext(f)
-            if ext != ".stc":
-                continue
-            logger.info(f"Formating {f}")
-            stc = stc_dir / f"{id}.stc"
-            mapping = mapping_dir / f"{id}.json"
-            name, data = format_stc(stc, mapping, self.min_version >= 3020)
-            # (Path(dst_dir) / f"{name}.json").write_text(self.json_formatter.serialize(data))
-            with (dst_dir / f"{name}.json").open("w", encoding="utf-8") as f:
-                json.dump(data, f, indent=4, ensure_ascii=False)
-        ...
+            try:
+                id, ext = os.path.splitext(f)
+                if ext != ".stc":
+                    continue
+                logger.info(f"Formating {f}")
+                stc = stc_dir / f"{id}.stc"
+                mapping = mapping_dir / f"{id}.json"
+                name, data = format_stc(stc, mapping, self.min_version >= 3020)
+                # (Path(dst_dir) / f"{name}.json").write_text(self.json_formatter.serialize(data))
+                with (dst_dir / f"{name}.json").open("w", encoding="utf-8") as f:
+                    json.dump(data, f, indent=4, ensure_ascii=False)
+            except Exception as e:
+                logger.warning(f"Failed to format {f}")
 
     @cached_property
     def resdata(self):
