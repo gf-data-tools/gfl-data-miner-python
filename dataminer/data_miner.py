@@ -200,7 +200,7 @@ class DataMiner:
                 "c": "game",
                 "a": "newserverList",
                 "channel": self.hosts["channel"],
-                "check_version": "99999",
+                "check_version": "0",
             },
             headers={},
         )
