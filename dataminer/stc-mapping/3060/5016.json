@@ -94,6 +94,7 @@
         "limit_vehicle",
         "limit_component_pool",
         "guide_cdn",
-        "mission_intensify_item_config"
+        "mission_intensify_item_config",
+        "mission_item"
     ]
 }

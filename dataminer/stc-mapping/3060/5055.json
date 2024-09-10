@@ -10,6 +10,7 @@
         "function_control_id",
         "start_time",
         "end_time",
-        "is_new"
+        "is_new",
+        "increase"
     ]
 }

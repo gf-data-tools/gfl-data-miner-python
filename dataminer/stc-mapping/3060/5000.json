@@ -15,6 +15,7 @@
         "consume_type",
         "item_access",
         "detail_introduction",
-        "is_hide_info"
+        "is_hide_info",
+        "type_sort"
     ]
 }

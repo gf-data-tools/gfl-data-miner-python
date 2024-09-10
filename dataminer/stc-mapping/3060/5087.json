@@ -10,6 +10,7 @@
         "skin",
         "poster",
         "code",
+        "normal_description",
         "bonus_description",
         "description",
         "is_hidden",
@@ -17,7 +18,7 @@
         "profile_pic",
         "item_access",
         "detail_introduction",
-        "#unk",
-        "normal_description"
+        "sort",
+        "type_sort"
     ]
 }

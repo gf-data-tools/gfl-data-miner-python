@@ -1,8 +1,10 @@
 {
     "name": "enemy_illustration",
     "fields": [
+        "sub_id",
         "id",
         "name",
+        "sub_name",
         "type",
         "code",
         "introduce",
@@ -16,6 +18,7 @@
         "armor_rank",
         "speed_rank",
         "range_rank",
+        "tenacity_rank",
         "counter",
         "character",
         "enemy_skill",
@@ -23,7 +26,6 @@
         "extra",
         "spine_scale",
         "org_id",
-        "related_story_id",
-        "tenacity_rank"
+        "related_story_id"
     ]
 }
