@@ -212,13 +212,13 @@ class DataMiner:
         return server
 
     @cached_property
-    def client_version_(self):
+    def client_version(self):
         client = self.server_info.getroot().find("./config/client_version").text
         logger.info(f"Client Version: {client}")
         return client
 
     @cached_property
-    def client_version(self):
+    def client_version_(self):
         return self.index_version["client_version"]
 
     @cached_property
