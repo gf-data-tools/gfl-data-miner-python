@@ -130,8 +130,8 @@ class DataMiner:
             logger.info(commit_msg)
             if push:
                 self.repo.remote().push()
-                self.dingtalk_notice(message)
-                self.qq_notice(message)
+                # self.dingtalk_notice(message)
+                # self.qq_notice(message)
                 return True
         except git.GitCommandError as e:
             logger.error(e)
