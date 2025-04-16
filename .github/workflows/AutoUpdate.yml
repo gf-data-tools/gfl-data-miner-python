@@ -6,7 +6,7 @@ on:
       cmdargs:
         description: 'Commandline Arguments'     
         required: false
-        default: 'at tw kr jp us' 
+        default: 'tw kr jp us' 
         type: string
   push:
   schedule:
