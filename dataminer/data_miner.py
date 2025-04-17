@@ -72,7 +72,6 @@ class DataMiner:
         if self.data_dir.exists():
             return (self.data_dir / filepath).read_text()
         else:
-            logger.info(f"Getting {filepath} from remote")
             req = request.Request(
                 f"https://raw.githubusercontent.com/{self.github_repo}/main/{filepath}",
                 headers={
@@ -81,6 +80,7 @@ class DataMiner:
                     )
                 },
             )
+            logger.info(f"Getting {filepath} from https://raw.githubusercontent.com/{self.github_repo}/main/{filepath}")
             return request.urlopen(req).read().decode("utf-8")
 
     @cached_property
