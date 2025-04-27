@@ -1,0 +1,11 @@
+{
+    "name": "daily_exmission_group",
+    "fields": [
+        "id",
+        "mission_id",
+        "state_type",
+        "vehicle_id",
+        "effect",
+        "mission_floor"
+    ]
+}

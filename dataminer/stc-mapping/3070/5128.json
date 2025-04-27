@@ -1,0 +1,11 @@
+{
+    "name": "chat_fix_phrases",
+    "fields": [
+        "id",
+        "group",
+        "content",
+        "paras",
+        "type",
+        "type_name"
+    ]
+}

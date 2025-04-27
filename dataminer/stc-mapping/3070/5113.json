@@ -1,0 +1,9 @@
+{
+    "name": "organization",
+    "fields": [
+        "id",
+        "parent_id",
+        "name",
+        "description"
+    ]
+}

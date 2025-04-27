@@ -1,0 +1,12 @@
+{
+    "name": "list_to_do",
+    "fields": [
+        "id",
+        "group",
+        "sort",
+        "type",
+        "description",
+        "function_control_id",
+        "goto_page_id"
+    ]
+}

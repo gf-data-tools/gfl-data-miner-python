@@ -80,7 +80,9 @@ class DataMiner:
                     )
                 },
             )
-            logger.info(f"Getting {filepath} from https://raw.githubusercontent.com/{self.github_repo}/main/{filepath}")
+            logger.info(
+                f"Getting {filepath} from https://raw.githubusercontent.com/{self.github_repo}/main/{filepath}"
+            )
             return request.urlopen(req).read().decode("utf-8")
 
     @cached_property
@@ -219,6 +221,8 @@ class DataMiner:
 
     @cached_property
     def client_version(self):
+        if self.region == "at":
+            return "30700"
         return self.index_version["client_version"]
 
     @cached_property

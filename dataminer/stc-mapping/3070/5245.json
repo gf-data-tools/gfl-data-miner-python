@@ -1,0 +1,7 @@
+{
+    "name": "breakout_trigger",
+    "fields": [
+        "id",
+        "bt_tree"
+    ]
+}
