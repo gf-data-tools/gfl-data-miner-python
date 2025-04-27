@@ -11,6 +11,9 @@
         "start_time",
         "end_time",
         "is_new",
-        "increase"
+        "increase",
+        "type_id",
+        "sort",
+        "obtain"
     ]
 }

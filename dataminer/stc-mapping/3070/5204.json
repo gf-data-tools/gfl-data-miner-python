@@ -5,6 +5,7 @@
         "page_id",
         "continuous_time",
         "return_task",
-        "prize_id"
+        "prize_id",
+        "prize_id_sp"
     ]
 }

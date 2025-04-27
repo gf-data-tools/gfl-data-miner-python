@@ -41,6 +41,8 @@
         "shader",
         "vehicle_engine_efficacy",
         "vehicle_assist_range",
-        "vehicle_longattack_range"
+        "vehicle_longattack_range",
+        "leader_code_switch",
+        "battleunit_code_switch"
     ]
 }
