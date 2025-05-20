@@ -10,7 +10,7 @@ on:
         type: string
   push:
   schedule:
-    - cron: '0 2-14/3 * * *'
+    - cron: '0 14 * * *'
     
 concurrency: repo_update
 
