@@ -181,7 +181,7 @@ class DataMiner:
     @cached_property
     def index_version(self):
         logger.info(f"Requesting version")
-        version_url = self.host_server + "Index/version"
+        version_url = self.host_server + "/Index/version"
         logger.info(version_url)
         response = request.urlopen(version_url).read().decode()
         logger.info(f"Response: {response}")
@@ -209,8 +209,9 @@ class DataMiner:
 
     @cached_property
     def host_server(self):
-        server = self.server_info.getroot().find("./server/addr").text
-        logger.info(f"Server Addr: {server}")
+        # server = self.server_info.getroot().find("./server/addr").text
+        # logger.info(f"Server Addr: {server}")
+        server = self.hosts["game_host"]
         return server
 
     @cached_property
@@ -306,7 +307,9 @@ class DataMiner:
             fname = (
                 f"{self.min_version}_alpha2020_{self.ab_version}_PCResConfigData2018"
             )
-        elif self.region in ["us", "ch", "tw", "kr", "jp"]:
+        elif self.region == "ch":
+            fname = f"{self.min_version}_{self.ab_version}_PCResConfigData2018"
+        elif self.region in ["us", "tw", "kr", "jp"]:
             fname = f"{self.min_version}_{self.ab_version}_AndroidResConfigData2018"
         else:
             fname = f"{self.min_version}_{self.ab_version}_AndroidResConfigData"
