@@ -1,0 +1,13 @@
+{
+    "name": "mission_skip",
+    "fields": [
+        "id",
+        "mission",
+        "mission_unlock",
+        "price",
+        "title",
+        "content",
+        "mission_text",
+        "stage"
+    ]
+}

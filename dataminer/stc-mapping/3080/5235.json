@@ -1,0 +1,8 @@
+{
+    "name": "simulation_battle_reward",
+    "fields": [
+        "mission_id",
+        "item_id",
+        "gift_id"
+    ]
+}

@@ -1,0 +1,9 @@
+{
+    "name": "recommended_team",
+    "fields": [
+        "id",
+        "name",
+        "auto_formation_id",
+        "auto_formation_sangvis_id"
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "name": "carnival_task",
+    "fields": [
+        "id",
+        "type",
+        "carnival_type_id",
+        "count",
+        "prize_id",
+        "title",
+        "content",
+        "function_control_id",
+        "goto_page_id"
+    ]
+}

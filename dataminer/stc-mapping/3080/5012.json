@@ -1,0 +1,12 @@
+{
+    "name": "squad_data_daily",
+    "fields": [
+        "id",
+        "title",
+        "content",
+        "type",
+        "count",
+        "rank",
+        "prize"
+    ]
+}

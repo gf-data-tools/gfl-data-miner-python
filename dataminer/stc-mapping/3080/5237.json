@@ -1,0 +1,9 @@
+{
+    "name": "letter",
+    "fields": [
+        "id",
+        "type",
+        "quote_id",
+        "code"
+    ]
+}
