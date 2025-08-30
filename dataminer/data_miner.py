@@ -222,8 +222,8 @@ class DataMiner:
 
     @cached_property
     def client_version(self):
-        if self.region == "at":
-            return "30700"
+        # if self.region == "at":
+        #     return "30700"
         return self.index_version["client_version"]
 
     @cached_property
