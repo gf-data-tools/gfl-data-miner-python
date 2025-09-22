@@ -10,6 +10,7 @@
         "description",
         "is_hide",
         "tag",
-        "order"
+        "order",
+        "campaign_sub_name"
     ]
 }

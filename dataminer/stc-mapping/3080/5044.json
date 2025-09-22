@@ -17,6 +17,8 @@
         "end",
         "fail",
         "step_start_story",
-        "step_end_story"
+        "step_end_story",
+        "story_playback_sub_id",
+        "background_code"
     ]
 }

@@ -11,6 +11,7 @@
         "refresh_rate",
         "daily_price",
         "author_price",
-        "gasha_reward_ids"
+        "gasha_reward_ids",
+        "rotate_switch"
     ]
 }
