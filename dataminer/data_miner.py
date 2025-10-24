@@ -275,10 +275,29 @@ class DataMiner:
                 with (dst_dir / f"{key}.json").open("w", encoding="utf-8") as f:
                     json.dump(data[key], f, indent=4, ensure_ascii=False)
 
+    def find_stc_mapping(self, filename: str):
+        mapping_dir = Path(__file__).parent / "stc-mapping"
+        min_ver_stc = mapping_dir / str(self.min_version) / filename
+        if min_ver_stc.exists():
+            return min_ver_stc
+        versions = sorted([int(ver.name) for ver in mapping_dir.iterdir()])
+        current_ver = self.min_version
+        while True:
+            prev_ver = next((v for v in versions[::-1] if v < current_ver), None)
+            if prev_ver is None:
+                return min_ver_stc  # will cause file not found error so as to emit warnings
+            f = mapping_dir / str(prev_ver) / filename
+            if f.exists():
+                logger.warn(f"Using stale stc mapping: {prev_ver} (expecting {self.min_version})")
+                return f
+            current_ver = prev_ver
+
     def process_stc(self):
         mapping_dir = Path(__file__).parent / f"stc-mapping/{int(self.min_version)}"
 
         logger.info(f"Reading stc-mapping from {mapping_dir}")
+        if not mapping_dir.exists():
+            logger.warn("Min version update: new mapping needed")
         stc_dir = Path(self.tmp_dir.name) / "stc"
         dst_dir = self.data_dir / "stc"
         dst_dir.mkdir(parents=True, exist_ok=True)
@@ -290,13 +309,13 @@ class DataMiner:
                     continue
                 logger.info(f"Formating {f}")
                 stc = stc_dir / f"{id}.stc"
-                mapping = mapping_dir / f"{id}.json"
+                mapping = self.find_stc_mapping(f"{id}.json")
                 name, data = format_stc(stc, mapping, self.min_version >= 3020)
                 # (Path(dst_dir) / f"{name}.json").write_text(self.json_formatter.serialize(data))
                 with (dst_dir / f"{name}.json").open("w", encoding="utf-8") as f:
                     json.dump(data, f, indent=4, ensure_ascii=False)
             except Exception as e:
-                logger.warning(f"Failed to format {f}")
+                logger.warning(f"Failed to format {f}: {e}")
 
     @cached_property
     def resdata(self):
