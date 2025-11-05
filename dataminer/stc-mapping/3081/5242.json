@@ -1,0 +1,13 @@
+{
+    "name": "breakout_item",
+    "fields": [
+        "id",
+        "name",
+        "icon",
+        "dec",
+        "type",
+        "cost_part",
+        "sold_part",
+        "skill_ids"
+    ]
+}

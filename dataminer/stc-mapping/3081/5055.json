@@ -1,0 +1,19 @@
+{
+    "name": "explore_mall",
+    "fields": [
+        "id",
+        "type",
+        "prize_id",
+        "cost",
+        "quota",
+        "clear_cycle",
+        "function_control_id",
+        "start_time",
+        "end_time",
+        "is_new",
+        "increase",
+        "type_id",
+        "sort",
+        "obtain"
+    ]
+}

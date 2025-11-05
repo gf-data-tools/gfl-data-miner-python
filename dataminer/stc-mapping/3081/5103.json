@@ -1,0 +1,8 @@
+{
+    "name": "sangvis_character_type",
+    "fields": [
+        "id",
+        "name",
+        "description"
+    ]
+}

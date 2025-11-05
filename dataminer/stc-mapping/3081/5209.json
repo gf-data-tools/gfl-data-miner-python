@@ -1,0 +1,15 @@
+{
+    "name": "daily_pass",
+    "fields": [
+        "id",
+        "type",
+        "item",
+        "pt",
+        "gift",
+        "gift2",
+        "start_time",
+        "end_time",
+        "gift_background",
+        "rotate_switch"
+    ]
+}
