@@ -60,6 +60,7 @@ def cli():
         except Exception as e:
             logger.exception(repr(e))
             error = True
+            print()
         finally:
             print("::endgroup::")
     if error:
