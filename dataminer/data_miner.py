@@ -50,6 +50,7 @@ class DataMiner:
     dingtalk_token: str = ""
     qq_channel: str = ""
     qq_token: str = ""
+    fallback_version = 3080
 
     def __post_init__(self):
         self.data_dir = Path(self.data_dir)
@@ -322,28 +323,33 @@ class DataMiner:
         logger.info(f"Getting resource data list")
         bkey = base64.standard_b64decode(self.res_key)
         biv = base64.standard_b64decode(self.res_iv)
-        if self.region == "at":
-            fname = (
-                f"{self.min_version}_alpha2020_{self.ab_version}_PCResConfigData2018"
-            )
-        elif self.region == "ch":
-            fname = f"{self.min_version}_{self.ab_version}_PCResConfigData2018"
-        elif self.region in ["us", "tw", "kr", "jp"]:
-            fname = f"{self.min_version}_{self.ab_version}_AndroidResConfigData2018"
-        else:
-            fname = f"{self.min_version}_{self.ab_version}_AndroidResConfigData"
-        logger.debug(f"resdata name {fname}")
 
-        en = get_des_encrypted(fname, bkey, biv[:8])
-        res_config = base64.standard_b64encode(en).decode("utf-8")
-        logger.debug(f"encoded {res_config}")
-        res_config = re.sub(r"[^a-zA-Z0-9]", "", res_config) + ".txt"
-        resdata_url = self.hosts["asset_host"] + "/" + res_config
+        def resdata_url(min_version, ab_version):
+            if self.region == "at":
+                fname = (
+                    f"{min_version}_alpha2020_{ab_version}_PCResConfigData2018"
+                )
+            elif self.region == "ch":
+                fname = f"{min_version}_{ab_version}_PCResConfigData2018"
+            elif self.region in ["us", "tw", "kr", "jp"]:
+                fname = f"{min_version}_{ab_version}_AndroidResConfigData2018"
+            else:
+                fname = f"{min_version}_{ab_version}_AndroidResConfigData"
+            logger.debug(f"resdata name {fname}")
+
+            en = get_des_encrypted(fname, bkey, biv[:8])
+            res_config = base64.standard_b64encode(en).decode("utf-8")
+            logger.debug(f"encoded {res_config}")
+            res_config = re.sub(r"[^a-zA-Z0-9]", "", res_config) + ".txt"
+            return self.hosts["asset_host"] + "/" + res_config
 
         tmp_dir = Path(self.tmp_dir.name)
 
         resdata_fp = tmp_dir / "AndroidResConfigData"
-        download(resdata_url, resdata_fp)
+        download(resdata_url(self.min_version, self.ab_version), resdata_fp)
+        if not resdata_fp.exists():
+            logger.info(f"Falling back to ResConfig version {self.fallback_version}")
+            download(resdata_url(self.fallback_version, self.ab_version), resdata_fp)
         unpack_all_assets(resdata_fp, tmp_dir)
         with open(tmp_dir / "assets/resources/resdata.asset", encoding="utf-8") as f:
             resdata = hjson.load(f)
